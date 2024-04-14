@@ -1,5 +1,8 @@
-﻿static void Main(string[] args)
+﻿class Program
 {
-    MapThing map = new MapThing();
-    map.PrintMap();
+    static void Main(string[] args)
+    {
+        Map map = new Map();
+        map.PrintMap();
+    }
 }

@@ -1,13 +1,13 @@
-﻿public class MapThing
+﻿public class Map
 {
     char[,] map = new char[12, 12];
-    public void CreateMap()
+    public Map()
     {
-        for (int i = 0; i < 12; i++)
+        for (int i = 0; i < map.GetLength(0); i++)
         {
-            for (int j = 0; j < 12; j++)
+            for (int j = 0; j < map.GetLength(1); j++)
             {
-                if (i == 0 || i == 12 || j == 0 || j == 12)
+                if (i == 0 || i == map.GetLength(0) - 1 || j == 0 || j == map.GetLength(1) - 1)
                 {
                     map[i, j] = 'E';
                 }
@@ -25,8 +25,17 @@
         {
             for (int j = 0;j < 12; j++)
             {
-                Console.WriteLine(map[i, j]);
+                Console.Write(map[i, j]);
             }
+            Console.WriteLine();
         }
+    }
+
+    public enum TileENUM
+    {
+        Empty,
+        Wall,
+        Player,
+        Enemy
     }
 }
