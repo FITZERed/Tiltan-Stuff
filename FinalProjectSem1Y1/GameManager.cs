@@ -11,7 +11,6 @@
             //here account for more things player input may cause
             //then put environmental changes
             CurrentLevel.RefreshMap();
-            Console.SetCursorPosition(0, 0);
             CurrentLevel.PrintCurrentMapState();
         }
     }

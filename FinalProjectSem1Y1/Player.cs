@@ -31,14 +31,17 @@
             case ConsoleKey.S:
             case ConsoleKey.DownArrow:
                 Position.Y++;
+                if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X] != Level.TileENUM.Empty) Position.Y--;
                 break;
             case ConsoleKey.D:
             case ConsoleKey.RightArrow:
                 Position.X++;
+                if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X] != Level.TileENUM.Empty) Position.X--;
                 break;
             case ConsoleKey.A:
             case ConsoleKey.LeftArrow:
                 Position.X--;
+                if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X] != Level.TileENUM.Empty) Position.X++;
                 break;
             default:
                 break;
