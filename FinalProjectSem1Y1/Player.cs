@@ -3,6 +3,8 @@
     public Point Position { get; set; }
     public int MaxHP;
     public int CurHP;
+    public Weapon CurrentWeapon;
+
     public bool IsDead()
     {
         if (CurHP <= 0) return true;
@@ -13,8 +15,9 @@
     public Player(Point position)
     {
         Position = position;
-        MaxHP = 50;
+        MaxHP = 15;
         CurHP = MaxHP;
+        CurrentWeapon = GameManager.Inventory.ObtainedWeapons[0];
     }
 
     public void PlayerInput()
@@ -43,12 +46,34 @@
                 Position.X--;
                 if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty) Position.X++;
                 break;
+            case ConsoleKey.Spacebar:
+                {
+                    PerformAttack(CurrentWeapon.WeaponType);
+                }
+                break;
+                //Create Attack Logic
             default:
                 break;
         }
     }
 
 
+    public void PerformAttack(WeaponType playerWeapon)
+    {
+        var attackDirection = Console.ReadKey();
+        switch (attackDirection.Key)
+        {
+            case ConsoleKey.A: break;
+            case ConsoleKey.D: break;
+            case ConsoleKey.S: break;
+            case ConsoleKey.W: break;
+            default: break;
 
-
+        }
+    }
+    
+    public void DetermineAttackTargets(AttackAOE attackAOE)
+    {
+        
+    }
 }
