@@ -2,7 +2,7 @@
 
 public class Level
 {
-    public TileENUM[,] map = new TileENUM[12, 22];
+    public TileENUM[,] map = new TileENUM[12, 21];
     public Point PlayerStartingPosition;
     public TileENUM[,] CurrentMapState;
     public Player Player;
@@ -10,43 +10,41 @@ public class Level
     public Level(int levelNum)
     {
         Player = new Player(PlayerStartingPosition);
-        SetStartingMapState(levelNum);
+        map = BuildInitialMapState(MapBuilder.ReadTextFile("Level " + levelNum + ".txt"));
         CurrentMapState = map;
         PrintCurrentMapState();
     }
 
-    public void SetStartingMapState(int levelNum)
+    public TileENUM[,] BuildInitialMapState(char[,] charMatrix)
     {
-        switch (levelNum)
+        TileENUM[,] map = new TileENUM[charMatrix.GetLength(0), charMatrix.GetLength(1)];
+        for (int i = 0; i < charMatrix.GetLength(0); i++)
         {
-            case 1:
-                PlayerStartingPosition = new Point(5, 5);
-                Player.Position = PlayerStartingPosition;
-                for (int i = 0; i < map.GetLength(0); i++)
+            for (int j = 0; j < charMatrix.GetLength(1); j++)
+            {
+                switch (charMatrix[i, j])
                 {
-                    for (int j = 0; j < map.GetLength(1); j++)
-                    {
-                        if (i == 0 || i == map.GetLength(0) - 1 || j == 0 || j == map.GetLength(1) - 1)
-                        {
-                            map[i, j] = TileENUM.Wall;
-                        }
-                        else if (i == 3 && (j <= 6 || (j >= 10 && j <= 16))) map[i, j] = TileENUM.Wall;
-                        else if (j == 16 && (i == 1 || i == 2 || i ==7)) map[i, j] = TileENUM.Wall;
-                        else if (i == 6 && (j <= 10 || j == 14)) map[i, j] = TileENUM.Wall;
-                        else if (i == 7 && (j == 10 || j >= 14)) map[i, j] = TileENUM.Wall;
-                        else if (i == PlayerStartingPosition.Y && j == PlayerStartingPosition.X)
-                        {
-                            map[i, j] = TileENUM.Player;
-                        }
-                        else
-                        {
-                            map[i, j] = TileENUM.Empty;
-                        }
-                    }
-                }
-            break;
+                    case ' ':
+                        map[i, j] = TileENUM.Empty; break;
+                    case 'P':
+                        map[i, j] = TileENUM.Player;
+                        PlayerStartingPosition = new Point(j, i);
+                        Player.Position = PlayerStartingPosition;
+                            break;
+                    case 'E':
+                        map[i, j] = TileENUM.StandardEnemy; break;
+                    case '█':
+                        map[i, j] = TileENUM.Wall; break;
+                    case 'X':
+                        map[i, j] = TileENUM.Exit; break;
+                    default: throw new ArgumentOutOfRangeException(charMatrix[i, j].ToString());
 
+
+                }
+            }
         }
+
+        return map;
     }
     public static char ConvertTileENUMtoChar(TileENUM tile)
     {
@@ -60,6 +58,8 @@ public class Level
                 return 'P';
             case TileENUM.StandardEnemy:
                 return 'E';
+            case TileENUM.Exit:
+                return 'X';
             default:
                 throw new ArgumentOutOfRangeException(nameof(tile));
         }
@@ -87,19 +87,24 @@ public class Level
             for (int j = 0; j < CurrentMapState.GetLength(1); ++j)
             {
                 if (CurrentMapState[i, j] == TileENUM.Wall) CurrentMapState[i, j] = TileENUM.Wall;
-                else if (Player.Position.Y == i && Player.Position.X == j) 
+                else if (Player.Position.Y == i && Player.Position.X == j)
                     CurrentMapState[i, j] = TileENUM.Player;
+                else if (CurrentMapState[i, j] == TileENUM.StandardEnemy) CurrentMapState[i, j] = TileENUM.StandardEnemy;
+                else if (CurrentMapState[i, j] == TileENUM.Exit) CurrentMapState[i, j] = TileENUM.Exit;
                 else CurrentMapState[i, j] = TileENUM.Empty;
             }
         }
 
         //need to get the player position and things, maybe this shoud be in GameManager
     }
-    public enum TileENUM
-    {
-        Empty,
-        Wall,
-        Player,
-        StandardEnemy
-    }
+   
+    
+}
+public enum TileENUM
+{
+    Empty,
+    Wall,
+    Player,
+    StandardEnemy,
+    Exit
 }

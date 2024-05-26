@@ -12,15 +12,17 @@
             }
         }
         int numRows = lines.Count;
-        int numCols = lines[0].Length;
-        char[,] mapLayout = new char[numRows, numCols];
+        int numColumns = lines[0].Length;
+        char[,] mapLayout = new char[numRows, numColumns];
         for (int i = 0; i < numRows; i++)
         {
-            for (int j = 0; j < numCols; j++)
+            for (int j = 0; j < numColumns; j++)
             {
                 mapLayout[i, j] = lines[i][j];
             }
         }
         return mapLayout;
     }
+
+    
 }

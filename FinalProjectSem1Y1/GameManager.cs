@@ -14,4 +14,8 @@
             CurrentLevel.PrintCurrentMapState();
         }
     }
+    public static void StartNewLevel()
+    {
+
+    }
 }
