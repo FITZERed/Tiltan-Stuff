@@ -1,4 +1,4 @@
-﻿public static class GameManager
+﻿public class GameManager
 {
     public static Level CurrentLevel;
     public static Inventory Inventory;
