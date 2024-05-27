@@ -80,7 +80,7 @@
         {
             priorityLeft += 1;
         }
-        int[] possibleDirections = new int[2];
+        List<int> possibleDirections = new List<int>(4);
         //Up - 1
         //Left - 2
         //Down - 3
@@ -90,7 +90,7 @@
         if (priorityLeft > 0) possibleDirections[1] = 2;
         if (priorityRight > 0) possibleDirections[1] = 4;
         int AIChoice;
-        AIChoice = Random.Shared.Next(0, 1);
+        AIChoice = Random.Shared.Next(0, possibleDirections.Count);
         if (possibleDirections[AIChoice] == 1) return "up";
         if (possibleDirections[AIChoice] == 2) return "left";
         if (possibleDirections[AIChoice] == 3) return "down";
