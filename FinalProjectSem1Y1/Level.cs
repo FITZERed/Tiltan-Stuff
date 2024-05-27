@@ -6,6 +6,7 @@ public class Level
     public Point PlayerStartingPosition;
     public TileENUM[,] CurrentMapState;
     public Player Player;
+    public EnemyLists EnemyLists;
     
     public Level(int levelNum)
     {
@@ -32,7 +33,10 @@ public class Level
                         Player.Position = PlayerStartingPosition;
                             break;
                     case 'E':
-                        map[i, j] = TileENUM.StandardEnemy; break;
+                        map[i, j] = TileENUM.StandardEnemy;
+                        //list enemies, figure out how exactly
+                        //EnemyLists.StandardEnemiesPresent.Add(new StandardEnemy());
+                        break;
                     case '█':
                         map[i, j] = TileENUM.Wall; break;
                     case 'X':

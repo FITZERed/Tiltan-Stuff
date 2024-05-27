@@ -1,6 +1,6 @@
 ﻿public class StandardEnemy
 {
-    
+
     public Point Position { get; set; }
     public int MaxHP;
     public int CurHP;
@@ -8,10 +8,25 @@
 
     public void EnemyActions()
     {
+        EnemyMove();
 
     }
 
-    public void DetermineMovementDirection()
+    public void EnemyAttack()
+    {
+        //make a pattern for this system, either enemies only attack from range 1 or they check if the player is within reach for complex weapons
+    }
+    public void EnemyMove()
+    {
+        string moveDirection = DetermineMovementDirection();
+        if (moveDirection == "NoMove") return;
+        if (moveDirection == "up") { Position.Y--; return; }
+        if (moveDirection == "down") { Position.Y++; return; }
+        if (moveDirection == "left") { Position.X--; return; }
+        if (moveDirection == "right") { Position.X++; return; }
+    }
+
+    public string DetermineMovementDirection()
     {
         int priorityUp = 0;
         int priorityDown = 0;
@@ -35,19 +50,19 @@
         }
         if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
         {
-            return;
+            return "NoMove";
         }
         if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
         {
-            return;
+            return "NoMove";
         }
         if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
         {
-            return;
+            return "NoMove";
         }
         if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
         {
-            return;
+            return "NoMove";
         }
         if (GameManager.CurrentLevel.Player.Position.Y > Position.Y)
         {
@@ -74,5 +89,12 @@
         if (priorityDown > 0)  possibleDirections[0] = 3;
         if (priorityLeft > 0) possibleDirections[1] = 2;
         if (priorityRight > 0) possibleDirections[1] = 4;
+        int AIChoice;
+        AIChoice = Random.Shared.Next(0, 1);
+        if (possibleDirections[AIChoice] == 1) return "up";
+        if (possibleDirections[AIChoice] == 2) return "left";
+        if (possibleDirections[AIChoice] == 3) return "down";
+        if (possibleDirections[AIChoice] == 4) return "right";
+        throw new Exception("enemy movement failed");
     }
 }
