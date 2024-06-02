@@ -6,10 +6,12 @@
     public int CurHP;
     public Weapon Weapon;
 
-    public void EnemyActions()
+    public StandardEnemy(Point point)
     {
-        EnemyMove();
-
+        Position = point;
+        MaxHP = 3;
+        CurHP = MaxHP;
+        //Weapon = new Weapon
     }
 
     public void EnemyAttack()
@@ -32,11 +34,12 @@
         int priorityDown = 0;
         int priorityLeft = 0;
         int priorityRight = 0;
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Wall)
+
+        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Wall)
         {
             priorityUp = -100;
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Wall)
+        if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Wall)
         {
             priorityDown = -100;
         }
@@ -48,11 +51,12 @@
         {
             priorityRight = -100;
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
+
+        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
         {
             return "NoMove";
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
+        if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
         {
             return "NoMove";
         }
@@ -64,6 +68,23 @@
         {
             return "NoMove";
         }
+        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.StandardEnemy)
+        {
+            priorityUp -= 50;
+        }
+        if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.StandardEnemy)
+        {
+            priorityDown -= 50;
+        }
+        if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.StandardEnemy)
+        {
+            priorityLeft -= 50;
+        }
+        if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.StandardEnemy)
+        {
+            priorityRight -= 50;
+        }
+
         if (GameManager.CurrentLevel.Player.Position.Y > Position.Y)
         {
             priorityDown += 1;
@@ -80,21 +101,28 @@
         {
             priorityLeft += 1;
         }
-        List<int> possibleDirections = new List<int>(4);
+
+        List<int> possibleDirections = new List<int>();
         //Up - 1
         //Left - 2
         //Down - 3
         //Right - 4
-        if (priorityUp > 0)  possibleDirections[0] = 1; 
-        if (priorityDown > 0)  possibleDirections[0] = 3;
-        if (priorityLeft > 0) possibleDirections[1] = 2;
-        if (priorityRight > 0) possibleDirections[1] = 4;
-        int AIChoice;
-        AIChoice = Random.Shared.Next(0, possibleDirections.Count);
+        if (priorityUp > 0) possibleDirections.Add(1);
+        if (priorityDown > 0) possibleDirections.Add(3);
+        if (priorityLeft > 0) possibleDirections.Add(2);
+        if (priorityRight > 0) possibleDirections.Add(4);
+
+        if (possibleDirections.Count == 0)
+        {
+            return "NoMove";
+        }
+
+        int AIChoice = Random.Shared.Next(0, possibleDirections.Count);
         if (possibleDirections[AIChoice] == 1) return "up";
         if (possibleDirections[AIChoice] == 2) return "left";
         if (possibleDirections[AIChoice] == 3) return "down";
         if (possibleDirections[AIChoice] == 4) return "right";
+
         throw new Exception("enemy movement failed");
     }
 }

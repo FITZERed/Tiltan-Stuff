@@ -6,7 +6,7 @@ public class Level
     public Point PlayerStartingPosition;
     public TileENUM[,] CurrentMapState;
     public Player Player;
-    public EnemyLists EnemyLists;
+    public EnemyLists EnemyLists = new();
     
     public Level(int levelNum)
     {
@@ -34,9 +34,8 @@ public class Level
                             break;
                     case 'E':
                         map[i, j] = TileENUM.StandardEnemy;
-                        //list enemies, figure out how exactly
-                        //EnemyLists.StandardEnemiesPresent.Add(new StandardEnemy());
-                        break;
+                        EnemyLists.StandardEnemiesPresent.Add(new StandardEnemy(new Point(j, i)));
+                            break;
                     case '█':
                         map[i, j] = TileENUM.Wall; break;
                     case 'X':
@@ -86,19 +85,21 @@ public class Level
     }
     public void RefreshMap()
     {
+        
         for (int i = 0; i < CurrentMapState.GetLength(0); ++i)
         {
             for (int j = 0; j < CurrentMapState.GetLength(1); ++j)
             {
                 if (CurrentMapState[i, j] == TileENUM.Wall) CurrentMapState[i, j] = TileENUM.Wall;
-                else if (Player.Position.Y == i && Player.Position.X == j)
-                    CurrentMapState[i, j] = TileENUM.Player;
-                else if (CurrentMapState[i, j] == TileENUM.StandardEnemy) CurrentMapState[i, j] = TileENUM.StandardEnemy;
                 else if (CurrentMapState[i, j] == TileENUM.Exit) CurrentMapState[i, j] = TileENUM.Exit;
                 else CurrentMapState[i, j] = TileENUM.Empty;
             }
         }
-
+        foreach (StandardEnemy standardEnemy in EnemyLists.StandardEnemiesPresent)
+        {
+            CurrentMapState[standardEnemy.Position.Y, standardEnemy.Position.X] = TileENUM.StandardEnemy;
+        }
+        CurrentMapState[Player.Position.Y, Player.Position.X] = TileENUM.Player;
         //need to get the player position and things, maybe this shoud be in GameManager
     }
    
