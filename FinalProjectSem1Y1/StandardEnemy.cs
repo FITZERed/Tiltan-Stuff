@@ -5,6 +5,12 @@
     public int MaxHP;
     public int CurHP;
     public Weapon Weapon;
+    public bool IsDead()
+    {
+        if (CurHP > 0)
+            return true;
+        return false;
+    }
 
     public StandardEnemy(Point point)
     {
