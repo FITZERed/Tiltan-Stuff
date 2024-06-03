@@ -11,6 +11,7 @@
         //adding spear could be here
         CurrentLevel = new Level(levelNum);
         GameLog = new GameLog();
+        GameLog.InitEventLog();
         GameLog.PrintLog();
         while (!CurrentLevel.Player.IsDead())
         {
