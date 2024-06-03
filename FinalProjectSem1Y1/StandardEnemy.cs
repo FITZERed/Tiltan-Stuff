@@ -7,7 +7,7 @@
     public Weapon Weapon;
     public bool IsDead()
     {
-        if (CurHP > 0)
+        if (CurHP <= 0)
             return true;
         return false;
     }
@@ -26,6 +26,7 @@
     }
     public void EnemyMove()
     {
+        if (IsDead()) {  return; }
         string moveDirection = DetermineMovementDirection();
         if (moveDirection == "NoMove") return;
         if (moveDirection == "up") { Position.Y--; return; }

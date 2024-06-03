@@ -2,13 +2,16 @@
 {
     public static Level CurrentLevel;
     public static Inventory Inventory;
+    public static GameLog GameLog;
 
     public static void StartGame()
     {
         int levelNum = 1;
         Inventory = new Inventory();
-        Inventory.ObtainedWeapons.Add(new Weapon(WeaponType.Spear));
+        //adding spear could be here
         CurrentLevel = new Level(levelNum);
+        GameLog = new GameLog();
+        GameLog.PrintLog();
         while (!CurrentLevel.Player.IsDead())
         {
             CurrentLevel.Player.PlayerInput();

@@ -97,6 +97,7 @@ public class Level
         }
         foreach (StandardEnemy standardEnemy in EnemyLists.StandardEnemiesPresent)
         {
+            if (standardEnemy.IsDead()) continue;
             CurrentMapState[standardEnemy.Position.Y, standardEnemy.Position.X] = TileENUM.StandardEnemy;
         }
         CurrentMapState[Player.Position.Y, Player.Position.X] = TileENUM.Player;
