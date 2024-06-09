@@ -31,11 +31,11 @@
 
 public enum AttackAOE
 {
-    OneForward,
     TwoForward,
     ThreeInFront,
     Ranged,
-    PlusShape
+    PlusShape,
+    OneForward
 }
 
 public enum WeaponType

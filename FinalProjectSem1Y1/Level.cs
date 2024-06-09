@@ -58,9 +58,9 @@ public class Level
             case TileENUM.Wall:
                 return '█';
             case TileENUM.Player:
-                return 'P';
+                return '♦';
             case TileENUM.StandardEnemy:
-                return 'E';
+                return '♠';
             case TileENUM.Exit:
                 return 'X';
             default:

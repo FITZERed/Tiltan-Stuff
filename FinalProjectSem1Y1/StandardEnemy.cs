@@ -1,4 +1,6 @@
-﻿public class StandardEnemy
+﻿using System.Security.Cryptography.X509Certificates;
+
+public class StandardEnemy
 {
 
     public Point Position { get; set; }
@@ -23,6 +25,33 @@
     public void EnemyAttack()
     {
         //make a pattern for this system, either enemies only attack from range 1 or they check if the player is within reach for complex weapons
+        if (IsDead()) return;
+        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
+        {
+            GameManager.CurrentLevel.Player.CurHP -= 1;
+            GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
+            return;
+        }
+        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
+        {
+            GameManager.CurrentLevel.Player.CurHP -= 1;
+            GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
+            return;
+        }
+        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
+        {
+            GameManager.CurrentLevel.Player.CurHP -= 1;
+            GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
+            return;
+        }
+        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
+        {
+            GameManager.CurrentLevel.Player.CurHP -= 1;
+            GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
+            return;
+        }
+        else return;
+
     }
     public void EnemyMove()
     {
@@ -33,6 +62,27 @@
         if (moveDirection == "down") { Position.Y++; return; }
         if (moveDirection == "left") { Position.X--; return; }
         if (moveDirection == "right") { Position.X++; return; }
+    }
+
+    public bool IsPlayerAdjacent()
+    {
+        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
+        {
+            return true;
+        }
+        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
+        {
+            return true;
+        }
+        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
+        {
+            return true;
+        }
+        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
+        {
+            return true;
+        }
+        else return false;
     }
 
     public string DetermineMovementDirection()

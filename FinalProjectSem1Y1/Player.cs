@@ -64,26 +64,26 @@
         {
             case ConsoleKey.A:
             case ConsoleKey.LeftArrow:
-                DetermineAttackTargetsLeft(playerWeaponAttack);
+                DetermineTargetsAndAttackLeft(playerWeaponAttack);
                 break;
             case ConsoleKey.D:
             case ConsoleKey.RightArrow:
-                DetermineAttackTargetsRight(playerWeaponAttack);
+                DetermineTargetsAndAttackRight(playerWeaponAttack);
                 break;
             case ConsoleKey.S:
             case ConsoleKey.DownArrow:
-                DetermineAttackTargetsDown(playerWeaponAttack);
+                DetermineTargetsAndAttackDown(playerWeaponAttack);
                 break;
             case ConsoleKey.W:
             case ConsoleKey.UpArrow:
-                DetermineAttackTargetsUp(playerWeaponAttack);
+                DetermineTargetsAndAttackUp(playerWeaponAttack);
                 break;
             default: break;
 
         }
     }
     
-    public void DetermineAttackTargetsLeft(WeaponType playerWeapon)
+    public void DetermineTargetsAndAttackLeft(WeaponType playerWeapon)
     {
         switch (playerWeapon)
         {
@@ -94,14 +94,23 @@
                     {
                         if (standardEnemy.Position.Y == Position.Y && (standardEnemy.Position.X == Position.X - 1 || standardEnemy.Position.X == Position.X - 2))
                         {
-                            standardEnemy.CurHP -= 2;
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= 2;
+                                GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 2 damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                            //if (standardEnemy.CurHP <= 0) { GameManager.GameLog.LogEvent("Standard Enemy defeated"); }
                         }
                     }
                 }
                 break;
         }
     }
-    public void DetermineAttackTargetsRight(WeaponType playerWeapon)
+    public void DetermineTargetsAndAttackRight(WeaponType playerWeapon)
     {
         switch (playerWeapon)
         {
@@ -112,14 +121,22 @@
                     {
                         if (standardEnemy.Position.Y == Position.Y && (standardEnemy.Position.X == Position.X + 1 || standardEnemy.Position.X == Position.X + 2))
                         {
-                            standardEnemy.CurHP -= 2;
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= 2;
+                                GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 2 damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
                         }
                     }
                 }
                 break;
         }
     }
-    public void DetermineAttackTargetsUp(WeaponType playerWeapon)
+    public void DetermineTargetsAndAttackUp(WeaponType playerWeapon)
     {
         switch (playerWeapon)
         {
@@ -130,14 +147,22 @@
                     {
                         if (standardEnemy.Position.X == Position.X && (standardEnemy.Position.Y == Position.Y - 1 || standardEnemy.Position.Y == Position.Y - 2))
                         {
-                            standardEnemy.CurHP -= 2;
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= 2;
+                                GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 2 damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
                         }
                     }
                 }
                 break;
         }
     }
-    public void DetermineAttackTargetsDown(WeaponType playerWeapon)
+    public void DetermineTargetsAndAttackDown(WeaponType playerWeapon)
     {
         switch (playerWeapon)
         {
@@ -148,7 +173,15 @@
                     {
                         if (standardEnemy.Position.X == Position.X && (standardEnemy.Position.Y == Position.Y + 1 || standardEnemy.Position.Y == Position.Y + 2))
                         {
-                            standardEnemy.CurHP -= 2;
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= 2;
+                                GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 2 damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
                         }
                     }
                 }

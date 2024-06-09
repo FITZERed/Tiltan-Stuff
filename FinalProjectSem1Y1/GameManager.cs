@@ -3,6 +3,7 @@
     public static Level CurrentLevel;
     public static Inventory Inventory;
     public static GameLog GameLog;
+    public static HUD Hud;
 
     public static void StartGame()
     {
@@ -11,6 +12,8 @@
         //adding spear could be here
         CurrentLevel = new Level(levelNum);
         GameLog = new GameLog();
+        Hud = new HUD();
+        Hud.PrintMonitors();
         GameLog.InitEventLog();
         GameLog.PrintLog();
         while (!CurrentLevel.Player.IsDead())
@@ -21,6 +24,7 @@
             //then put environmental changes
             EnemyActions();
             CurrentLevel.RefreshMap();
+            Hud.PrintMonitors();
             CurrentLevel.PrintCurrentMapState();
         }
     }
@@ -34,7 +38,13 @@
         {
             standardEnemy.EnemyMove();
             CurrentLevel.RefreshMap();
+            Hud.PrintMonitors();
         }
-
+        foreach (StandardEnemy standardEnemy in GameManager.CurrentLevel.EnemyLists.StandardEnemiesPresent)
+        {
+            standardEnemy.EnemyAttack();
+            CurrentLevel.RefreshMap();
+            Hud.PrintMonitors();
+        }
     }
 }
