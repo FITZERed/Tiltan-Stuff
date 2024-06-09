@@ -7,10 +7,11 @@ public class Level
     public TileENUM[,] CurrentMapState;
     public Player Player;
     public EnemyLists EnemyLists = new();
+    public Exit Exit;
     
     public Level(int levelNum)
     {
-        Player = new Player(PlayerStartingPosition);
+        Player = GameManager.Player;
         map = BuildInitialMapState(MapBuilder.ReadTextFile("Level " + levelNum + ".txt"));
         CurrentMapState = map;
         PrintCurrentMapState();
@@ -39,7 +40,9 @@ public class Level
                     case '█':
                         map[i, j] = TileENUM.Wall; break;
                     case 'X':
-                        map[i, j] = TileENUM.Exit; break;
+                        map[i, j] = TileENUM.Exit;
+                        Exit = new Exit(new Point(j, i));
+                        break;
                     default: throw new ArgumentOutOfRangeException(charMatrix[i, j].ToString());
 
 
@@ -72,15 +75,14 @@ public class Level
 
     public void PrintCurrentMapState()
     {
-        Console.SetCursorPosition(0, 0);
         for (int i = 0; i < CurrentMapState.GetLength(0); i++)
         {
+            Console.SetCursorPosition(0, i);
             for (int j = 0; j < CurrentMapState.GetLength(1); j++)
             {
                 char tileToPrint = ConvertTileENUMtoChar(CurrentMapState[i, j]);
                 Console.Write(tileToPrint);
             }
-            Console.WriteLine();
         }
     }
     public void RefreshMap()

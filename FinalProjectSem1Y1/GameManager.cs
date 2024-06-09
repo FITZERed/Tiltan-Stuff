@@ -1,13 +1,16 @@
-﻿public  static class GameManager
+﻿global using static GameManager;
+public  static class GameManager
 {
     public static Level CurrentLevel;
+    public static Player Player;
     public static Inventory Inventory;
     public static GameLog GameLog;
     public static HUD Hud;
+    public static int levelNum = 1;
 
     public static void StartGame()
     {
-        int levelNum = 1;
+        Player = new Player();
         Inventory = new Inventory();
         //adding spear could be here
         CurrentLevel = new Level(levelNum);
@@ -16,9 +19,9 @@
         Hud.PrintMonitors();
         GameLog.InitEventLog();
         GameLog.PrintLog();
-        while (!CurrentLevel.Player.IsDead())
+        while (!Player.IsDead())
         {
-            CurrentLevel.Player.PlayerInput();
+            Player.PlayerInput();
             CurrentLevel.RefreshMap();
             //here account for more things player input may cause
             //then put environmental changes
@@ -46,5 +49,9 @@
             CurrentLevel.RefreshMap();
             Hud.PrintMonitors();
         }
+    }
+    public static void AdvanceLevel()
+    {
+        CurrentLevel = new Level(levelNum);
     }
 }

@@ -7,6 +7,7 @@ public class StandardEnemy
     public int MaxHP;
     public int CurHP;
     public Weapon Weapon;
+    private Player Player { get { return GameManager.Player; } }
     public bool IsDead()
     {
         if (CurHP <= 0)
@@ -21,32 +22,31 @@ public class StandardEnemy
         CurHP = MaxHP;
         //Weapon = new Weapon
     }
-
     public void EnemyAttack()
     {
         //make a pattern for this system, either enemies only attack from range 1 or they check if the player is within reach for complex weapons
         if (IsDead()) return;
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
+        if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
         {
-            GameManager.CurrentLevel.Player.CurHP -= 1;
+            Player.CurHP -= 1;
             GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
             return;
         }
-        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
+        else if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
         {
-            GameManager.CurrentLevel.Player.CurHP -= 1;
+            Player.CurHP -= 1;
             GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
             return;
         }
-        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
+        else if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
         {
-            GameManager.CurrentLevel.Player.CurHP -= 1;
+            Player.CurHP -= 1;
             GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
             return;
         }
-        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
+        else if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
         {
-            GameManager.CurrentLevel.Player.CurHP -= 1;
+            Player.CurHP -= 1;
             GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
             return;
         }
@@ -66,19 +66,19 @@ public class StandardEnemy
 
     public bool IsPlayerAdjacent()
     {
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
+        if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
         {
             return true;
         }
-        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
+        else if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
         {
             return true;
         }
-        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
+        else if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
         {
             return true;
         }
-        else if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
+        else if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
         {
             return true;
         }
@@ -92,69 +92,69 @@ public class StandardEnemy
         int priorityLeft = 0;
         int priorityRight = 0;
 
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Wall)
+        if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Wall)
         {
             priorityUp = -100;
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Wall)
+        if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Wall)
         {
             priorityDown = -100;
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Wall)
+        if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Wall)
         {
             priorityLeft = -100;
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Wall)
+        if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Wall)
         {
             priorityRight = -100;
         }
 
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
+        if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
         {
             return "NoMove";
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
+        if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
         {
             return "NoMove";
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
+        if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
         {
             return "NoMove";
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
+        if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
         {
             return "NoMove";
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.StandardEnemy)
+        if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.StandardEnemy)
         {
             priorityUp -= 50;
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.StandardEnemy)
+        if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.StandardEnemy)
         {
             priorityDown -= 50;
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.StandardEnemy)
+        if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.StandardEnemy)
         {
             priorityLeft -= 50;
         }
-        if (GameManager.CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.StandardEnemy)
+        if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.StandardEnemy)
         {
             priorityRight -= 50;
         }
 
-        if (GameManager.CurrentLevel.Player.Position.Y > Position.Y)
+        if (CurrentLevel.Player.Position.Y > Position.Y)
         {
             priorityDown += 1;
         }
-        if (GameManager.CurrentLevel.Player.Position.Y < Position.Y)
+        if (CurrentLevel.Player.Position.Y < Position.Y)
         {
             priorityUp += 1;
         }
-        if (GameManager.CurrentLevel.Player.Position.X > Position.X)
+        if (CurrentLevel.Player.Position.X > Position.X)
         {
             priorityRight += 1;
         }
-        if (GameManager.CurrentLevel.Player.Position.X < Position.X)
+        if (CurrentLevel.Player.Position.X < Position.X)
         {
             priorityLeft += 1;
         }
