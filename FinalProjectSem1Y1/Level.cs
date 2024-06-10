@@ -8,6 +8,7 @@ public class Level
     public Player Player;
     public EnemyLists EnemyLists = new();
     public Exit Exit;
+    public Entrance Entrance;
     
     public Level(int levelNum)
     {
@@ -32,6 +33,7 @@ public class Level
                         map[i, j] = TileENUM.Player;
                         PlayerStartingPosition = new Point(j, i);
                         Player.Position = PlayerStartingPosition;
+                        Entrance = new Entrance(PlayerStartingPosition);
                             break;
                     case 'E':
                         map[i, j] = TileENUM.StandardEnemy;
@@ -66,6 +68,8 @@ public class Level
                 return '♠';
             case TileENUM.Exit:
                 return 'X';
+            case TileENUM.Entrance:
+                return 'E';
             default:
                 throw new ArgumentOutOfRangeException(nameof(tile));
         }
@@ -94,7 +98,9 @@ public class Level
             {
                 if (CurrentMapState[i, j] == TileENUM.Wall) CurrentMapState[i, j] = TileENUM.Wall;
                 else if (CurrentMapState[i, j] == TileENUM.Exit) CurrentMapState[i, j] = TileENUM.Exit;
+                else if (i == PlayerStartingPosition.Y && j == PlayerStartingPosition.X) CurrentMapState[i, j] = TileENUM.Entrance;
                 else CurrentMapState[i, j] = TileENUM.Empty;
+
             }
         }
         foreach (StandardEnemy standardEnemy in EnemyLists.StandardEnemiesPresent)
@@ -114,5 +120,6 @@ public enum TileENUM
     Wall,
     Player,
     StandardEnemy,
-    Exit
+    Exit,
+    Entrance
 }

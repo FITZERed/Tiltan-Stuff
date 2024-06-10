@@ -31,7 +31,7 @@
                 {
                     TryExit();
                 }
-                if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty) Position.Y++;
+                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance) Position.Y++;
                 //need to check if new tile is valid, not sure how to access CurrentMapState from player...
                 break;
             case ConsoleKey.S:
@@ -41,7 +41,7 @@
                 {
                     TryExit();
                 }
-                if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty) Position.Y--;
+                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance) Position.Y--;
                 break;
             case ConsoleKey.D:
             case ConsoleKey.RightArrow:
@@ -50,7 +50,7 @@
                 {
                     TryExit();
                 }
-                if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty) Position.X--;
+                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance) Position.X--;
                 break;
             case ConsoleKey.A:
             case ConsoleKey.LeftArrow:
@@ -59,7 +59,7 @@
                 {
                     TryExit();
                 }
-                if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty) Position.X++;
+                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance) Position.X++;
                 break;
             case ConsoleKey.Spacebar:
                 {

@@ -53,5 +53,6 @@ public  static class GameManager
     public static void AdvanceLevel()
     {
         CurrentLevel = new Level(levelNum);
+        GameLog.LogEvent("Advanced to Level " + levelNum);
     }
 }

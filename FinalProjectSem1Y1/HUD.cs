@@ -6,5 +6,7 @@
     {
         Console.SetCursorPosition(0, 15);
         Console.Write("Player Health: " + PlayerHP + "             ");
+        Console.SetCursorPosition(0, 16);
+        Console.Write("Level: " + levelNum + "             ");
     }
 }
