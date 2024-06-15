@@ -8,4 +8,10 @@
         this.X = x;
         this.Y = y;
     }
+
+    public Point(Point point)
+    {
+        this.X = point.X;
+        this.Y = point.Y;
+    }
 }

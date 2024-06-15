@@ -1,4 +1,5 @@
 ﻿global using static GameManager;
+using System.Text;
 public  static class GameManager
 {
     public static Level CurrentLevel;
@@ -10,6 +11,7 @@ public  static class GameManager
 
     public static void StartGame()
     {
+        Console.OutputEncoding = Encoding.UTF8;
         Player = new Player();
         Inventory = new Inventory();
         //adding spear could be here

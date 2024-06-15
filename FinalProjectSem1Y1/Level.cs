@@ -13,7 +13,7 @@ public class Level
     public Level(int levelNum)
     {
         Player = GameManager.Player;
-        map = BuildInitialMapState(MapBuilder.ReadTextFile("Level " + levelNum + ".txt"));
+        map = BuildInitialMapState(MapBuilder.ReadTextFile(".\\LevelsNotepad\\Level " + levelNum + ".txt"));
         CurrentMapState = map;
         PrintCurrentMapState();
     }
@@ -32,8 +32,8 @@ public class Level
                     case 'P':
                         map[i, j] = TileENUM.Player;
                         PlayerStartingPosition = new Point(j, i);
-                        Player.Position = PlayerStartingPosition;
-                        Entrance = new Entrance(PlayerStartingPosition);
+                        Player.Position = new Point(PlayerStartingPosition);
+                        Entrance = new Entrance(new Point(PlayerStartingPosition));
                             break;
                     case 'E':
                         map[i, j] = TileENUM.StandardEnemy;
@@ -96,9 +96,12 @@ public class Level
         {
             for (int j = 0; j < CurrentMapState.GetLength(1); ++j)
             {
-                if (CurrentMapState[i, j] == TileENUM.Wall) CurrentMapState[i, j] = TileENUM.Wall;
-                else if (CurrentMapState[i, j] == TileENUM.Exit) CurrentMapState[i, j] = TileENUM.Exit;
-                else if (i == PlayerStartingPosition.Y && j == PlayerStartingPosition.X) CurrentMapState[i, j] = TileENUM.Entrance;
+                if (CurrentMapState[i, j] == TileENUM.Wall)
+                    CurrentMapState[i, j] = TileENUM.Wall;
+                else if (CurrentMapState[i, j] == TileENUM.Exit)
+                    CurrentMapState[i, j] = TileENUM.Exit;
+                else if (i == PlayerStartingPosition.Y && j == PlayerStartingPosition.X)
+                    CurrentMapState[i, j] = TileENUM.Entrance;
                 else CurrentMapState[i, j] = TileENUM.Empty;
 
             }
