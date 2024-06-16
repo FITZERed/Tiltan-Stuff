@@ -66,6 +66,16 @@
                     PerformAttack(CurrentWeapon.WeaponType);
                 }
                 break;
+            case ConsoleKey.E:
+                {
+                    OpenChest();
+                }
+                break;
+            case ConsoleKey.H:
+                {
+                    UseHealPotion();
+                }
+                break;
             default:
                 break;
         }
@@ -77,6 +87,103 @@
         {
             levelNum++;
             AdvanceLevel();
+        }
+        else { GameManager.GameLog.LogEvent("Exit Unavailable, there are still enemies present."); }
+    }
+    public void UseHealPotion()
+    {
+        if(GameManager.Inventory.HealingPotions <= 0)
+        {
+            GameManager.GameLog.LogEvent("You have no Healing Potions.");
+            return;
+        }
+        CurHP += 3;
+        if (CurHP > MaxHP) { CurHP = MaxHP; }
+        GameManager.Inventory.SubtractPotion();
+        GameManager.GameLog.LogEvent("Player has used a Healing Potion.");
+    }
+    public void OpenChest()
+    {
+        var directionToChestToOpen = Console.ReadKey();
+        switch (directionToChestToOpen.Key)
+        {
+            case ConsoleKey.W:
+            case ConsoleKey.UpArrow:
+                if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Chest)
+                {
+                    foreach (Chest chest in CurrentLevel.InteractablesLists.ChestsPresent)
+                        if (chest.Position.X == Position.X && chest.Position.Y == Position.Y - 1)
+                        {
+                            if (!chest.IsLooted)
+                            {
+                                GainChestContents(chest);
+                                GameManager.GameLog.LogEvent("Chest looted.");
+                            }
+                            else { GameManager.GameLog.LogEvent("This Chest is already looted."); }
+                        }
+                }
+                break;
+            case ConsoleKey.S:
+            case ConsoleKey.DownArrow:
+                if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Chest)
+                {
+                    foreach (Chest chest in CurrentLevel.InteractablesLists.ChestsPresent)
+                        if (chest.Position.X == Position.X && chest.Position.Y == Position.Y + 1)
+                        {
+                            if (!chest.IsLooted)
+                            {
+                                GainChestContents(chest);
+                                GameManager.GameLog.LogEvent("Chest looted.");
+                            }
+                            else { GameManager.GameLog.LogEvent("This Chest is already looted."); }
+                        }
+                }
+                break;
+            case ConsoleKey.D:
+            case ConsoleKey.RightArrow:
+                if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Chest)
+                {
+                    foreach (Chest chest in CurrentLevel.InteractablesLists.ChestsPresent)
+                        if (chest.Position.X == Position.X + 1 && chest.Position.Y == Position.Y)
+                        {
+                            if (!chest.IsLooted)
+                            {
+                                GainChestContents(chest);
+                                GameManager.GameLog.LogEvent("Chest looted.");
+                            }
+                            else { GameManager.GameLog.LogEvent("This Chest is already looted."); }
+                        }
+                }
+                break;
+            case ConsoleKey.A:
+            case ConsoleKey.LeftArrow:
+                if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Chest)
+                {
+                    foreach (Chest chest in CurrentLevel.InteractablesLists.ChestsPresent)
+                        if (chest.Position.X == Position.X - 1 && chest.Position.Y == Position.Y)
+                        {
+                            if (!chest.IsLooted)
+                            {
+                                GainChestContents(chest);
+                                GameManager.GameLog.LogEvent("Chest looted.");
+                            }
+                            else { GameManager.GameLog.LogEvent("This Chest is already looted."); }
+                        }
+                }
+                break;
+            default: break;
+        }
+    }
+    public void GainChestContents(Chest chest)
+    {
+        switch(chest.Content) 
+        {
+            case ChestContent.HealingPotion:
+                GameManager.Inventory.AddPotion();
+                chest.LootChest();
+                break;
+                //Add cases for different chest contents
+            default: break;
         }
     }
 
@@ -105,6 +212,7 @@
 
         }
     }
+
     
     public void DetermineTargetsAndAttackLeft(WeaponType playerWeapon)
     {
@@ -113,7 +221,7 @@
             case WeaponType.Spear:
                 {
                     //point x- x-2
-                    foreach (StandardEnemy standardEnemy in CurrentLevel.EnemyLists.StandardEnemiesPresent)
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
                     {
                         if (standardEnemy.Position.Y == Position.Y && (standardEnemy.Position.X == Position.X - 1 || standardEnemy.Position.X == Position.X - 2))
                         {
@@ -140,7 +248,7 @@
             case WeaponType.Spear:
                 {
                     //point x+ x+2
-                    foreach (StandardEnemy standardEnemy in CurrentLevel.EnemyLists.StandardEnemiesPresent)
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
                     {
                         if (standardEnemy.Position.Y == Position.Y && (standardEnemy.Position.X == Position.X + 1 || standardEnemy.Position.X == Position.X + 2))
                         {
@@ -166,7 +274,7 @@
             case WeaponType.Spear:
                 {
                     //point y- y-2
-                    foreach (StandardEnemy standardEnemy in CurrentLevel.EnemyLists.StandardEnemiesPresent)
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
                     {
                         if (standardEnemy.Position.X == Position.X && (standardEnemy.Position.Y == Position.Y - 1 || standardEnemy.Position.Y == Position.Y - 2))
                         {
@@ -192,7 +300,7 @@
             case WeaponType.Spear:
                 {
                     //point y- y-2
-                    foreach (StandardEnemy standardEnemy in CurrentLevel.EnemyLists.StandardEnemiesPresent)
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
                     {
                         if (standardEnemy.Position.X == Position.X && (standardEnemy.Position.Y == Position.Y + 1 || standardEnemy.Position.Y == Position.Y + 2))
                         {

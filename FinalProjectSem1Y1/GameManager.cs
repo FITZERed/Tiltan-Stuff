@@ -39,13 +39,13 @@ public  static class GameManager
     }
     public static void EnemyActions()
     {
-        foreach (StandardEnemy standardEnemy in GameManager.CurrentLevel.EnemyLists.StandardEnemiesPresent)
+        foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
         {
             standardEnemy.EnemyMove();
             CurrentLevel.RefreshMap();
             Hud.PrintMonitors();
         }
-        foreach (StandardEnemy standardEnemy in GameManager.CurrentLevel.EnemyLists.StandardEnemiesPresent)
+        foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
         {
             standardEnemy.EnemyAttack();
             CurrentLevel.RefreshMap();

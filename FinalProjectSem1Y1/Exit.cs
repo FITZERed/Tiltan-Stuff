@@ -3,7 +3,7 @@
     public Point Position { get; set; }
     public bool IsAvailable()
     {
-        foreach (StandardEnemy standardEnemy in CurrentLevel.EnemyLists.StandardEnemiesPresent)//adding all enemy lists required
+        foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)//adding all enemy lists required
         {
             if (!standardEnemy.IsDead())
             {

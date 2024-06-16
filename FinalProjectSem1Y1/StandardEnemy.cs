@@ -87,43 +87,46 @@ public class StandardEnemy
 
     public string DetermineMovementDirection()
     {
+        if (IsPlayerAdjacent())
+        {
+            return "NoMove";
+        }
         int priorityUp = 0;
         int priorityDown = 0;
         int priorityLeft = 0;
         int priorityRight = 0;
 
-        if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Wall)
+        if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] != TileENUM.Empty)
         {
             priorityUp = -100;
         }
-        if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Wall)
+        if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] != TileENUM.Empty)
         {
             priorityDown = -100;
         }
-        if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Wall)
+        if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] != TileENUM.Empty)
         {
             priorityLeft = -100;
         }
-        if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Wall)
+        if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] != TileENUM.Empty)
         {
             priorityRight = -100;
         }
-
-        if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
+        if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Entrance)
         {
-            return "NoMove";
+            priorityUp = +100;
         }
-        if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
+        if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Entrance)
         {
-            return "NoMove";
+            priorityDown = +100;
         }
-        if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
+        if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Entrance)
         {
-            return "NoMove";
+            priorityLeft = +100;
         }
-        if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
+        if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Entrance)
         {
-            return "NoMove";
+            priorityRight = +100;
         }
         if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.StandardEnemy)
         {

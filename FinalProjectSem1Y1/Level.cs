@@ -6,14 +6,14 @@ public class Level
     public Point PlayerStartingPosition;
     public TileENUM[,] CurrentMapState;
     public Player Player;
-    public EnemyLists EnemyLists = new();
+    public InteractablesLists InteractablesLists = new();
     public Exit Exit;
     public Entrance Entrance;
     
     public Level(int levelNum)
     {
         Player = GameManager.Player;
-        map = BuildInitialMapState(MapBuilder.ReadTextFile(".\\LevelsNotepad\\Level " + levelNum + ".txt"));
+        map = BuildInitialMapState(MapBuilder.ReadTextFile("Level " + levelNum + ".txt"));
         CurrentMapState = map;
         PrintCurrentMapState();
     }
@@ -37,13 +37,17 @@ public class Level
                             break;
                     case 'E':
                         map[i, j] = TileENUM.StandardEnemy;
-                        EnemyLists.StandardEnemiesPresent.Add(new StandardEnemy(new Point(j, i)));
+                        InteractablesLists.StandardEnemiesPresent.Add(new StandardEnemy(new Point(j, i)));
                             break;
                     case '█':
                         map[i, j] = TileENUM.Wall; break;
                     case 'X':
                         map[i, j] = TileENUM.Exit;
                         Exit = new Exit(new Point(j, i));
+                        break;
+                    case 'H':
+                        map[i, j] = TileENUM.Chest;
+                        InteractablesLists.ChestsPresent.Add(new Chest(new Point(j, i), ChestContent.HealingPotion));
                         break;
                     default: throw new ArgumentOutOfRangeException(charMatrix[i, j].ToString());
 
@@ -70,12 +74,15 @@ public class Level
                 return 'X';
             case TileENUM.Entrance:
                 return 'E';
+            case TileENUM.Chest:
+                return '◘';
             default:
                 throw new ArgumentOutOfRangeException(nameof(tile));
         }
     }
     //♦
     //♠
+    //◘
 
     public void PrintCurrentMapState()
     {
@@ -102,11 +109,13 @@ public class Level
                     CurrentMapState[i, j] = TileENUM.Exit;
                 else if (i == PlayerStartingPosition.Y && j == PlayerStartingPosition.X)
                     CurrentMapState[i, j] = TileENUM.Entrance;
+                else if (CurrentMapState[i, j] == TileENUM.Chest)
+                    CurrentMapState[i, j] |= TileENUM.Chest;
                 else CurrentMapState[i, j] = TileENUM.Empty;
 
             }
         }
-        foreach (StandardEnemy standardEnemy in EnemyLists.StandardEnemiesPresent)
+        foreach (StandardEnemy standardEnemy in InteractablesLists.StandardEnemiesPresent)
         {
             if (standardEnemy.IsDead()) continue;
             CurrentMapState[standardEnemy.Position.Y, standardEnemy.Position.X] = TileENUM.StandardEnemy;
@@ -124,5 +133,6 @@ public enum TileENUM
     Player,
     StandardEnemy,
     Exit,
-    Entrance
+    Entrance,
+    Chest
 }
