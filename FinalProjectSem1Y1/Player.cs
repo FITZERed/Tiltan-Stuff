@@ -76,6 +76,11 @@
                     UseHealPotion();
                 }
                 break;
+            case ConsoleKey.X:
+                {
+                    SwitchWeapon();
+                }
+                break;
             default:
                 break;
         }
@@ -101,6 +106,10 @@
         if (CurHP > MaxHP) { CurHP = MaxHP; }
         GameManager.Inventory.SubtractPotion();
         GameManager.GameLog.LogEvent("Player has used a Healing Potion.");
+    }
+    public void SwitchWeapon()
+    {
+
     }
     public void OpenChest()
     {
@@ -182,6 +191,10 @@
                 GameManager.Inventory.AddPotion();
                 chest.LootChest();
                 break;
+            case ChestContent.Axe:
+                GameManager.Inventory.GainWeapon(WeaponType.Axe);
+                chest.LootChest();
+                break;
                 //Add cases for different chest contents
             default: break;
         }
@@ -234,7 +247,26 @@
                                     GameManager.GameLog.LogEvent("Standard Enemy defeated");
                                 }
                             }
-                            //if (standardEnemy.CurHP <= 0) { GameManager.GameLog.LogEvent("Standard Enemy defeated"); }
+                        }
+                    }
+                }
+                break;
+            case WeaponType.Axe:
+                {
+                    //point x-, x-y-, x-y+
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
+                    {
+                        if (standardEnemy.Position.X == Position.X - 1 && (standardEnemy.Position.Y == Position.Y || standardEnemy.Position.Y == Position.Y - 1 || standardEnemy.Position.Y == Position.Y + 1))
+                        {
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= 3;
+                                GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
                         }
                     }
                 }
@@ -256,6 +288,26 @@
                             {
                                 standardEnemy.CurHP -= 2;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 2 damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            case WeaponType.Axe:
+                {
+                    //point x+, x+y-, x+y+
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
+                    {
+                        if (standardEnemy.Position.X == Position.X + 1 && (standardEnemy.Position.Y == Position.Y || standardEnemy.Position.Y == Position.Y - 1 || standardEnemy.Position.Y == Position.Y + 1))
+                        {
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= 3;
+                                GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
                                 if (standardEnemy.IsDead())
                                 {
                                     GameManager.GameLog.LogEvent("Standard Enemy defeated");
@@ -291,6 +343,26 @@
                     }
                 }
                 break;
+            case WeaponType.Axe:
+                {
+                    //point y-, x-y-, x+y-
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
+                    {
+                        if (standardEnemy.Position.Y == Position.Y - 1 && (standardEnemy.Position.X == Position.X || standardEnemy.Position.X == Position.X - 1 || standardEnemy.Position.X == Position.X + 1))
+                        {
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= 3;
+                                GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
         }
     }
     public void DetermineTargetsAndAttackDown(WeaponType playerWeapon)
@@ -308,6 +380,26 @@
                             {
                                 standardEnemy.CurHP -= 2;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 2 damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            case WeaponType.Axe:
+                {
+                    //point y+, x-y+, x+y+
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
+                    {
+                        if (standardEnemy.Position.Y == Position.Y + 1 && (standardEnemy.Position.X == Position.X || standardEnemy.Position.X == Position.X - 1 || standardEnemy.Position.X == Position.X + 1))
+                        {
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= 3;
+                                GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
                                 if (standardEnemy.IsDead())
                                 {
                                     GameManager.GameLog.LogEvent("Standard Enemy defeated");

@@ -5,11 +5,21 @@
 
     public void PrintMonitors()
     {
-        Console.SetCursorPosition(0, 15);
+        int line = 15;
+        Console.SetCursorPosition(0, line);
         Console.Write("Player Health: " + PlayerHP + "             ");
-        Console.SetCursorPosition(0, 16);
+        line++;
+        Console.SetCursorPosition(0, line);
         Console.Write("Level: " + levelNum + "             ");
-        Console.SetCursorPosition(0, 17);
+        line++;
+        Console.SetCursorPosition(0, line);
         Console.Write("Healing Potions: " + HealingPotionsStock + "                  ");
+        line++;
+        Console.SetCursorPosition(0, line);
+        Console.Write("Weapons in inventory: ");
+        foreach (Weapon weapon in GameManager.Inventory.ObtainedWeapons)
+        {
+            Console.Write(weapon.WeaponName + ", ");
+        }
     }
 }

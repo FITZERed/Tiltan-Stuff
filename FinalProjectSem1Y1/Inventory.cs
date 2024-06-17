@@ -15,4 +15,8 @@
     {
         ObtainedWeapons.Add(new Weapon(WeaponType.Spear));
     }
+    public void GainWeapon(WeaponType weaponType)
+    {
+        ObtainedWeapons.Add(new Weapon(weaponType));
+    }
 }

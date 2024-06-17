@@ -49,6 +49,10 @@ public class Level
                         map[i, j] = TileENUM.Chest;
                         InteractablesLists.ChestsPresent.Add(new Chest(new Point(j, i), ChestContent.HealingPotion));
                         break;
+                    case 'A':
+                        map[i, j] = TileENUM.Chest;
+                        InteractablesLists.ChestsPresent.Add(new Chest(new Point(j, i), ChestContent.Axe));
+                        break;
                     default: throw new ArgumentOutOfRangeException(charMatrix[i, j].ToString());
 
 
