@@ -7,6 +7,7 @@
 
     public Weapon(WeaponType weaponType)
     {
+        WeaponType = weaponType;
         switch(weaponType)
         {
             case WeaponType.Spear:

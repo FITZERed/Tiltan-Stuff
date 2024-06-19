@@ -16,10 +16,17 @@
         Console.Write("Healing Potions: " + HealingPotionsStock + "                  ");
         line++;
         Console.SetCursorPosition(0, line);
+        Console.Write("Equipped Weapon: " + GameManager.Player.CurrentWeapon.WeaponName + "                          ");
+        line++;
+        Console.SetCursorPosition(0, line);
         Console.Write("Weapons in inventory: ");
-        foreach (Weapon weapon in GameManager.Inventory.ObtainedWeapons)
+        line++;
+        Console.SetCursorPosition(0, line);
+        for (int i = 0; i < GameManager.Inventory.ObtainedWeapons.Count; i++)
         {
-            Console.Write(weapon.WeaponName + ", ");
+            Console.Write(i+1 + ". " + GameManager.Inventory.ObtainedWeapons[i].WeaponName);
+            line++;
+            Console.SetCursorPosition(0, line);
         }
     }
 }

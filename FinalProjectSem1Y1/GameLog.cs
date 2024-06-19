@@ -25,7 +25,7 @@
 
     private Queue<string> EventLog = new Queue<string>();
 
-    private int EventLogSize = 5;
+    private int EventLogSize = 8;
     public void LogEvent(string eventToLog)
     {
         AddLog(eventToLog);

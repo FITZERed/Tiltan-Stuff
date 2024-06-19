@@ -63,7 +63,7 @@
                 break;
             case ConsoleKey.Spacebar:
                 {
-                    PerformAttack(CurrentWeapon.WeaponType);
+                    PlayerPerformAttack();
                 }
                 break;
             case ConsoleKey.E:
@@ -109,7 +109,34 @@
     }
     public void SwitchWeapon()
     {
-
+        GameManager.GameLog.LogEvent("Choose the desired weapon's slot in inventory");
+        var playerWeaponChoice = Console.ReadKey();
+        int temp = 0;
+        switch(playerWeaponChoice.Key)
+        {
+            case ConsoleKey.D1:
+                temp = 0;
+                break;
+            case ConsoleKey.D2:
+                temp = 1;
+                break;
+            case ConsoleKey.D3:
+                temp = 2;
+                break;
+            case ConsoleKey.D4:
+                temp = 3;
+                break;
+            default: temp = 0; break;
+        }
+        if(temp >= GameManager.Inventory.ObtainedWeapons.Count)
+        {
+            GameManager.GameLog.LogEvent("There is no weapon in this slot... Weapon unchanged");
+            return;
+        }
+        else
+        {
+            _currentWeaponIndex = temp;
+        }
     }
     public void OpenChest()
     {
@@ -200,26 +227,27 @@
         }
     }
 
-    public void PerformAttack(WeaponType playerWeaponAttack)
+    public void PlayerPerformAttack()
     {
+        GameManager.GameLog.LogEvent("Choose a direction to attack in");
         var attackDirection = Console.ReadKey();
         switch (attackDirection.Key)
         {
             case ConsoleKey.A:
             case ConsoleKey.LeftArrow:
-                DetermineTargetsAndAttackLeft(playerWeaponAttack);
+                DetermineTargetsAndAttackLeft(CurrentWeapon.AttackAOE);
                 break;
             case ConsoleKey.D:
             case ConsoleKey.RightArrow:
-                DetermineTargetsAndAttackRight(playerWeaponAttack);
+                DetermineTargetsAndAttackRight(CurrentWeapon.AttackAOE);
                 break;
             case ConsoleKey.S:
             case ConsoleKey.DownArrow:
-                DetermineTargetsAndAttackDown(playerWeaponAttack);
+                DetermineTargetsAndAttackDown(CurrentWeapon.AttackAOE);
                 break;
             case ConsoleKey.W:
             case ConsoleKey.UpArrow:
-                DetermineTargetsAndAttackUp(playerWeaponAttack);
+                DetermineTargetsAndAttackUp(CurrentWeapon.AttackAOE);
                 break;
             default: break;
 
@@ -227,11 +255,11 @@
     }
 
     
-    public void DetermineTargetsAndAttackLeft(WeaponType playerWeapon)
+    public void DetermineTargetsAndAttackLeft(AttackAOE weaponAOE)
     {
-        switch (playerWeapon)
+        switch (weaponAOE)
         {
-            case WeaponType.Spear:
+            case AttackAOE.TwoForward:
                 {
                     //point x- x-2
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
@@ -240,7 +268,7 @@
                         {
                             if (!standardEnemy.IsDead())
                             {
-                                standardEnemy.CurHP -= 2;
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 2 damage");
                                 if (standardEnemy.IsDead())
                                 {
@@ -251,7 +279,7 @@
                     }
                 }
                 break;
-            case WeaponType.Axe:
+            case AttackAOE.ThreeInFront:
                 {
                     //point x-, x-y-, x-y+
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
@@ -260,7 +288,7 @@
                         {
                             if (!standardEnemy.IsDead())
                             {
-                                standardEnemy.CurHP -= 3;
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
                                 if (standardEnemy.IsDead())
                                 {
@@ -273,11 +301,11 @@
                 break;
         }
     }
-    public void DetermineTargetsAndAttackRight(WeaponType playerWeapon)
+    public void DetermineTargetsAndAttackRight(AttackAOE weaponAOE)
     {
-        switch (playerWeapon)
+        switch (weaponAOE)
         {
-            case WeaponType.Spear:
+            case AttackAOE.TwoForward:
                 {
                     //point x+ x+2
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
@@ -286,7 +314,7 @@
                         {
                             if (!standardEnemy.IsDead())
                             {
-                                standardEnemy.CurHP -= 2;
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 2 damage");
                                 if (standardEnemy.IsDead())
                                 {
@@ -297,7 +325,7 @@
                     }
                 }
                 break;
-            case WeaponType.Axe:
+            case AttackAOE.ThreeInFront:
                 {
                     //point x+, x+y-, x+y+
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
@@ -306,7 +334,7 @@
                         {
                             if (!standardEnemy.IsDead())
                             {
-                                standardEnemy.CurHP -= 3;
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
                                 if (standardEnemy.IsDead())
                                 {
@@ -319,11 +347,11 @@
                 break;
         }
     }
-    public void DetermineTargetsAndAttackUp(WeaponType playerWeapon)
+    public void DetermineTargetsAndAttackUp(AttackAOE weaponAOE)
     {
-        switch (playerWeapon)
+        switch (weaponAOE)
         {
-            case WeaponType.Spear:
+            case AttackAOE.TwoForward:
                 {
                     //point y- y-2
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
@@ -332,7 +360,7 @@
                         {
                             if (!standardEnemy.IsDead())
                             {
-                                standardEnemy.CurHP -= 2;
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 2 damage");
                                 if (standardEnemy.IsDead())
                                 {
@@ -343,7 +371,7 @@
                     }
                 }
                 break;
-            case WeaponType.Axe:
+            case AttackAOE.ThreeInFront:
                 {
                     //point y-, x-y-, x+y-
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
@@ -352,7 +380,7 @@
                         {
                             if (!standardEnemy.IsDead())
                             {
-                                standardEnemy.CurHP -= 3;
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
                                 if (standardEnemy.IsDead())
                                 {
@@ -365,11 +393,11 @@
                 break;
         }
     }
-    public void DetermineTargetsAndAttackDown(WeaponType playerWeapon)
+    public void DetermineTargetsAndAttackDown(AttackAOE weaponAOE)
     {
-        switch (playerWeapon)
+        switch (weaponAOE)
         {
-            case WeaponType.Spear:
+            case AttackAOE.TwoForward:
                 {
                     //point y- y-2
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
@@ -378,7 +406,7 @@
                         {
                             if (!standardEnemy.IsDead())
                             {
-                                standardEnemy.CurHP -= 2;
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 2 damage");
                                 if (standardEnemy.IsDead())
                                 {
@@ -389,7 +417,7 @@
                     }
                 }
                 break;
-            case WeaponType.Axe:
+            case AttackAOE.ThreeInFront:
                 {
                     //point y+, x-y+, x+y+
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
@@ -398,7 +426,7 @@
                         {
                             if (!standardEnemy.IsDead())
                             {
-                                standardEnemy.CurHP -= 3;
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
                                 if (standardEnemy.IsDead())
                                 {
