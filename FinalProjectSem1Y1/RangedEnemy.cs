@@ -5,7 +5,7 @@
     public int CurHP;
     public Weapon Weapon;
     private RangedEnemyState State;
-    private FaceDirection Direction;
+    public FaceDirection Direction;
     private Player Player { get { return GameManager.Player; } }
     
     public bool IsDead()
@@ -63,13 +63,49 @@
                 }
                 break;
             case FaceDirection.Right:
-
-                break;
+                for (int i = Position.X + 1; i < 24; i++)
+                {
+                    if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Empty)
+                        continue;
+                    else if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Wall)
+                        break;
+                    else if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Player)
+                    {
+                        Player.CurHP -= 2;
+                        break;
+                    }
+                    else { break; }
+                }
+                    break;
             case FaceDirection.Up:
-
-                break;
+                for (int i = Position.Y - 1; i > 0; i--)
+                {
+                    if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Empty)
+                        continue;
+                    else if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Wall)
+                        break;
+                    else if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Player)
+                    {
+                        Player.CurHP -= 2;
+                        break;
+                    }
+                    else { break; }
+                }
+                    break;
             case FaceDirection.Down:
-
+                for (int i = Position.Y + 1; i < 24; i++)
+                {
+                    if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Empty)
+                        continue;
+                    else if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Wall)
+                        break;
+                    else if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Player)
+                    {
+                        Player.CurHP -= 2;
+                        break;
+                    }
+                    else { break; }
+                }
                 break;
             default:
                 break;
@@ -88,5 +124,6 @@ public enum FaceDirection
     Up,
     Down,
     Left,
-    Right
+    Right,
+    None
 }

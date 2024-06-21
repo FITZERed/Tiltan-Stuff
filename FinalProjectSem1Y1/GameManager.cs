@@ -27,6 +27,7 @@ public  static class GameManager
             CurrentLevel.RefreshMap();
             //here account for more things player input may cause
             //then put environmental changes
+            RefreshEnemyLists();
             EnemyActions();
             CurrentLevel.RefreshMap();
             Hud.PrintMonitors();
@@ -41,9 +42,9 @@ public  static class GameManager
     {
         foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
         {
-            standardEnemy.EnemyMove();
-            CurrentLevel.RefreshMap();
-            Hud.PrintMonitors();
+                standardEnemy.EnemyMove();
+                CurrentLevel.RefreshMap();
+                Hud.PrintMonitors();
         }
         foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
         {
@@ -51,6 +52,37 @@ public  static class GameManager
             CurrentLevel.RefreshMap();
             Hud.PrintMonitors();
         }
+        foreach (RangedEnemy rangeEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+        {
+                rangeEnemy.CycleShooting();
+                CurrentLevel.RefreshMap();
+                Hud.PrintMonitors();
+        }
+        if (CurrentLevel.InteractablesLists.RangedEnemiesPresent.Count > 0)
+        {
+            CurrentLevel.CycleRangedEnemiesStateTracker();
+        }
+    }
+    public static void RefreshEnemyLists()
+    {
+        List<StandardEnemy> SEList = new List<StandardEnemy>();
+        List<RangedEnemy> REList = new List<RangedEnemy>();
+        foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
+        {
+            if (!standardEnemy.IsDead())
+            {
+                SEList.Add(standardEnemy);
+            }
+        }
+        foreach (RangedEnemy rangeEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+        {
+            if (!rangeEnemy.IsDead())
+            {
+                REList.Add(rangeEnemy);
+            }
+        }
+        CurrentLevel.InteractablesLists.StandardEnemiesPresent = SEList;
+        CurrentLevel.InteractablesLists.RangedEnemiesPresent = REList;
     }
     public static void AdvanceLevel()
     {

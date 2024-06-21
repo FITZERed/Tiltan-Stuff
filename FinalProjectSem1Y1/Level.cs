@@ -9,12 +9,17 @@ public class Level
     public InteractablesLists InteractablesLists = new();
     public Exit Exit;
     public Entrance Entrance;
-    
+    public RangedEnemyState RangedEnemiesStateTracker;
+
     public Level(int levelNum)
     {
         Player = GameManager.Player;
         map = BuildInitialMapState(MapBuilder.ReadTextFile("Level " + levelNum + ".txt"));
         CurrentMapState = map;
+        if (InteractablesLists.RangedEnemiesPresent.Count > 0)
+        {
+            RangedEnemiesStateTracker = RangedEnemyState.PrepingShot;
+        }
         PrintCurrentMapState();
     }
 
@@ -53,6 +58,22 @@ public class Level
                         map[i, j] = TileENUM.Chest;
                         InteractablesLists.ChestsPresent.Add(new Chest(new Point(j, i), ChestContent.Axe));
                         break;
+                    case 'i':
+                        map[i, j] = TileENUM.RangedEnemyUp;
+                        InteractablesLists.RangedEnemiesPresent.Add(new RangedEnemy(new Point(j, i), FaceDirection.Up));
+                        break;
+                    case 'k':
+                        map[i, j] = TileENUM.RangedEnemyDown;
+                        InteractablesLists.RangedEnemiesPresent.Add(new RangedEnemy(new Point(j, i), FaceDirection.Down));
+                        break;
+                    case 'j':
+                        map[i, j] = TileENUM.RangedEnemyLeft;
+                        InteractablesLists.RangedEnemiesPresent.Add(new RangedEnemy(new Point(j, i), FaceDirection.Left));
+                        break;
+                    case 'l':
+                        map[i, j] = TileENUM.RangedEnemyRight;
+                        InteractablesLists.RangedEnemiesPresent.Add(new RangedEnemy(new Point(j, i), FaceDirection.Right));
+                        break;
                     default: throw new ArgumentOutOfRangeException(charMatrix[i, j].ToString());
 
 
@@ -80,6 +101,14 @@ public class Level
                 return 'E';
             case TileENUM.Chest:
                 return '◘';
+            case TileENUM.RangedEnemyUp:
+                return '↑';
+            case TileENUM.RangedEnemyDown:
+                return '↓';
+            case TileENUM.RangedEnemyLeft:
+                return '←';
+            case TileENUM.RangedEnemyRight:
+                return '→';
             default:
                 throw new ArgumentOutOfRangeException(nameof(tile));
         }
@@ -87,6 +116,10 @@ public class Level
     //♦
     //♠
     //◘
+    //↑
+    //↓
+    //←
+    //→
 
     public void PrintCurrentMapState()
     {
@@ -124,11 +157,49 @@ public class Level
             if (standardEnemy.IsDead()) continue;
             CurrentMapState[standardEnemy.Position.Y, standardEnemy.Position.X] = TileENUM.StandardEnemy;
         }
+        foreach (RangedEnemy rangedEnemy in InteractablesLists.RangedEnemiesPresent)
+        {
+            if (rangedEnemy.IsDead()) continue;
+            if (rangedEnemy.Direction == FaceDirection.Up)
+            {
+                CurrentMapState[rangedEnemy.Position.Y, rangedEnemy.Position.X] = TileENUM.RangedEnemyUp;
+            }
+            else if (rangedEnemy.Direction == FaceDirection.Down)
+            {
+                CurrentMapState[rangedEnemy.Position.Y, rangedEnemy.Position.X] = TileENUM.RangedEnemyDown;
+            }
+            else if (rangedEnemy.Direction == FaceDirection.Left)
+            {
+                CurrentMapState[rangedEnemy.Position.Y, rangedEnemy.Position.X] = TileENUM.RangedEnemyLeft;
+            }
+            else if (rangedEnemy.Direction == FaceDirection.Right)
+            {
+                CurrentMapState[rangedEnemy.Position.Y, rangedEnemy.Position.X] = TileENUM.RangedEnemyRight;
+            }
+        }
         CurrentMapState[Player.Position.Y, Player.Position.X] = TileENUM.Player;
         //need to get the player position and things, maybe this shoud be in GameManager
     }
-   
-    
+
+    public void CycleRangedEnemiesStateTracker()
+    {
+        if (RangedEnemiesStateTracker == RangedEnemyState.PrepingShot)
+        {
+            RangedEnemiesStateTracker = RangedEnemyState.DrawingShot;
+            GameManager.GameLog.LogEvent("Ranged Enemies drawing arrows");
+        }
+        else if (RangedEnemiesStateTracker == RangedEnemyState.DrawingShot)
+        {
+            RangedEnemiesStateTracker = RangedEnemyState.JustShot;
+            GameManager.GameLog.LogEvent("Ranged Enemies shooting");
+        }
+        else if (RangedEnemiesStateTracker == RangedEnemyState.JustShot)
+        {
+            RangedEnemiesStateTracker = RangedEnemyState.PrepingShot;
+            GameManager.GameLog.LogEvent("Ranged Enemies preparing new arrows");
+        }
+    }
+
 }
 public enum TileENUM
 {
@@ -136,6 +207,10 @@ public enum TileENUM
     Wall,
     Player,
     StandardEnemy,
+    RangedEnemyUp,
+    RangedEnemyDown,
+    RangedEnemyLeft,
+    RangedEnemyRight,
     Exit,
     Entrance,
     Chest

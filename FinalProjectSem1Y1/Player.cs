@@ -277,6 +277,21 @@
                             }
                         }
                     }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if (rangedEnemy.Position.Y == Position.Y && (rangedEnemy.Position.X == Position.X - 1 || rangedEnemy.Position.X == Position.X - 2))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Ranged Enemy for 2 damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -291,6 +306,21 @@
                                 standardEnemy.CurHP -= CurrentWeapon.Power;
                                 GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
                                 if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if (rangedEnemy.Position.X == Position.X - 1 && (rangedEnemy.Position.Y == Position.Y || rangedEnemy.Position.Y == Position.Y - 1 || rangedEnemy.Position.Y == Position.Y + 1))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
+                                if (rangedEnemy.IsDead())
                                 {
                                     GameManager.GameLog.LogEvent("Standard Enemy defeated");
                                 }
@@ -323,6 +353,21 @@
                             }
                         }
                     }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if (rangedEnemy.Position.Y == Position.Y && (rangedEnemy.Position.X == Position.X + 1 || rangedEnemy.Position.X == Position.X + 2))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Ranged Enemy for 2 damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -339,6 +384,21 @@
                                 if (standardEnemy.IsDead())
                                 {
                                     GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if (rangedEnemy.Position.X == Position.X + 1 && (rangedEnemy.Position.Y == Position.Y || rangedEnemy.Position.Y == Position.Y - 1 || rangedEnemy.Position.Y == Position.Y + 1))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Ranged Enemy for 3 damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
                                 }
                             }
                         }
@@ -369,6 +429,21 @@
                             }
                         }
                     }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if (rangedEnemy.Position.X == Position.X && (rangedEnemy.Position.Y == Position.Y - 1 || rangedEnemy.Position.Y == Position.Y - 2))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Ranged Enemy for 2 damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -385,6 +460,21 @@
                                 if (standardEnemy.IsDead())
                                 {
                                     GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if (rangedEnemy.Position.Y == Position.Y - 1 && (rangedEnemy.Position.X == Position.X || rangedEnemy.Position.X == Position.X - 1 || rangedEnemy.Position.X == Position.X + 1))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Ranged Enemy for 3 damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
                                 }
                             }
                         }
@@ -415,6 +505,21 @@
                             }
                         }
                     }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if (rangedEnemy.Position.X == Position.X && (rangedEnemy.Position.Y == Position.Y + 1 || rangedEnemy.Position.Y == Position.Y + 2))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Ranged Enemy for 2 damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -431,6 +536,21 @@
                                 if (standardEnemy.IsDead())
                                 {
                                     GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if (rangedEnemy.Position.Y == Position.Y + 1 && (rangedEnemy.Position.X == Position.X || rangedEnemy.Position.X == Position.X - 1 || rangedEnemy.Position.X == Position.X + 1))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Ranged Enemy for 3 damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
                                 }
                             }
                         }
