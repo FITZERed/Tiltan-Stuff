@@ -62,11 +62,18 @@ public  static class GameManager
         {
             CurrentLevel.CycleRangedEnemiesStateTracker();
         }
+        foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+        {
+            rangedMiniBoss.SpotAndShoot();
+            CurrentLevel.RefreshMap();
+            Hud.PrintMonitors();
+        }
     }
     public static void RefreshEnemyLists()
     {
         List<StandardEnemy> SEList = new List<StandardEnemy>();
         List<RangedEnemy> REList = new List<RangedEnemy>();
+        List<RangedMiniBoss> RMBList = new List<RangedMiniBoss>();
         foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
         {
             if (!standardEnemy.IsDead())
@@ -81,8 +88,16 @@ public  static class GameManager
                 REList.Add(rangeEnemy);
             }
         }
+        foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+        {
+            if (!rangedMiniBoss.IsDead())
+            {
+                RMBList.Add(rangedMiniBoss);
+            }
+        }
         CurrentLevel.InteractablesLists.StandardEnemiesPresent = SEList;
         CurrentLevel.InteractablesLists.RangedEnemiesPresent = REList;
+        CurrentLevel.InteractablesLists.RangedMiniBossPresent = RMBList;
     }
     public static void AdvanceLevel()
     {

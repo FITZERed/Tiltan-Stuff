@@ -21,7 +21,7 @@
                 WeaponName = "Axe";
                 break;
             case WeaponType.ShortBow:
-                Power = 1;
+                Power = 2;
                 AttackAOE = AttackAOE.Ranged;
                 WeaponName = "Shortbow";
                 break;

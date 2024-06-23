@@ -222,6 +222,10 @@
                 GameManager.Inventory.GainWeapon(WeaponType.Axe);
                 chest.LootChest();
                 break;
+            case ChestContent.ShortBow:
+                GameManager.Inventory.GainWeapon(WeaponType.ShortBow);
+                chest.LootChest();
+                break;
                 //Add cases for different chest contents
             default: break;
         }
@@ -292,6 +296,21 @@
                             }
                         }
                     }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if (rangedMiniBoss.Position.Y == Position.Y && (rangedMiniBoss.Position.X == Position.X - 1 || rangedMiniBoss.Position.X == Position.X - 2))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Mini-Boss for 2 damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                                }
+                            }
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -319,15 +338,47 @@
                             if (!rangedEnemy.IsDead())
                             {
                                 rangedEnemy.CurHP -= CurrentWeapon.Power;
-                                GameManager.GameLog.LogEvent("Player has hit Standard Enemy for 3 damage");
+                                GameManager.GameLog.LogEvent("Player has hit Ranged Enemy for 3 damage");
                                 if (rangedEnemy.IsDead())
                                 {
-                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if (rangedMiniBoss.Position.X == Position.X - 1 && (rangedMiniBoss.Position.Y == Position.Y || rangedMiniBoss.Position.Y == Position.Y - 1 || rangedMiniBoss.Position.Y == Position.Y + 1))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Mini-Boss for 3 damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
                                 }
                             }
                         }
                     }
                 }
+                break;
+            case AttackAOE.Ranged:
+                for (int i = Position.X - 1; i > 0; i--) 
+                {
+                    if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Empty) continue;
+                    else if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Wall) break;
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.Y, i), out StandardEnemy standardEnemy))
+                    {
+                        standardEnemy.CurHP -= CurrentWeapon.Power;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.Y, i), out RangedEnemy rangedEnemy))
+                    {
+                        rangedEnemy.CurHP -= CurrentWeapon.Power;
+                    }
+                    //else
+                }
+               
                 break;
         }
     }
@@ -368,6 +419,21 @@
                             }
                         }
                     }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if (rangedMiniBoss.Position.Y == Position.Y && (rangedMiniBoss.Position.X == Position.X + 1 || rangedMiniBoss.Position.X == Position.X + 2))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Mini-Boss for 2 damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                                }
+                            }
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -399,6 +465,21 @@
                                 if (rangedEnemy.IsDead())
                                 {
                                     GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if (rangedMiniBoss.Position.X == Position.X + 1 && (rangedMiniBoss.Position.Y == Position.Y || rangedMiniBoss.Position.Y == Position.Y - 1 || rangedMiniBoss.Position.Y == Position.Y + 1))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Mini-Boss for 3 damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
                                 }
                             }
                         }
@@ -444,6 +525,21 @@
                             }
                         }
                     }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if (rangedMiniBoss.Position.X == Position.X && (rangedMiniBoss.Position.Y == Position.Y - 1 || rangedMiniBoss.Position.Y == Position.Y - 2))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Mini-Boss for 2 damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                                }
+                            }
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -475,6 +571,21 @@
                                 if (rangedEnemy.IsDead())
                                 {
                                     GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if (rangedMiniBoss.Position.Y == Position.Y - 1 && (rangedMiniBoss.Position.X == Position.X || rangedMiniBoss.Position.X == Position.X - 1 || rangedMiniBoss.Position.X == Position.X + 1))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Mini-Boss for 3 damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
                                 }
                             }
                         }
@@ -520,6 +631,21 @@
                             }
                         }
                     }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if (rangedMiniBoss.Position.X == Position.X && (rangedMiniBoss.Position.Y == Position.Y + 1 || rangedMiniBoss.Position.Y == Position.Y + 2))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Mini-Boss for 2 damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                                }
+                            }
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -551,6 +677,21 @@
                                 if (rangedEnemy.IsDead())
                                 {
                                     GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if (rangedMiniBoss.Position.Y == Position.Y + 1 && (rangedMiniBoss.Position.X == Position.X || rangedMiniBoss.Position.X == Position.X - 1 || rangedMiniBoss.Position.X == Position.X + 1))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent("Player has hit Mini-Boss for 3 damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
                                 }
                             }
                         }

@@ -19,5 +19,6 @@ public enum ChestContent
 {
     HealingPotion,
     Axe,
-    LegendSword
+    LegendSword,
+    ShortBow
 }

@@ -58,6 +58,10 @@ public class Level
                         map[i, j] = TileENUM.Chest;
                         InteractablesLists.ChestsPresent.Add(new Chest(new Point(j, i), ChestContent.Axe));
                         break;
+                    case 'b':
+                        map[i, j] = TileENUM.Chest;
+                        InteractablesLists.ChestsPresent.Add(new Chest(new Point(j, i), ChestContent.ShortBow));
+                        break;
                     case 'i':
                         map[i, j] = TileENUM.RangedEnemyUp;
                         InteractablesLists.RangedEnemiesPresent.Add(new RangedEnemy(new Point(j, i), FaceDirection.Up));
@@ -73,6 +77,10 @@ public class Level
                     case 'l':
                         map[i, j] = TileENUM.RangedEnemyRight;
                         InteractablesLists.RangedEnemiesPresent.Add(new RangedEnemy(new Point(j, i), FaceDirection.Right));
+                        break;
+                    case 'R':
+                        map[i, j] = TileENUM.RangedMiniBoss;
+                        InteractablesLists.RangedMiniBossPresent.Add(new RangedMiniBoss(new Point(j, i)));
                         break;
                     default: throw new ArgumentOutOfRangeException(charMatrix[i, j].ToString());
 
@@ -109,6 +117,8 @@ public class Level
                 return '←';
             case TileENUM.RangedEnemyRight:
                 return '→';
+            case TileENUM.RangedMiniBoss:
+                return '╬';
             default:
                 throw new ArgumentOutOfRangeException(nameof(tile));
         }
@@ -120,6 +130,7 @@ public class Level
     //↓
     //←
     //→
+    //╬
 
     public void PrintCurrentMapState()
     {
@@ -177,6 +188,11 @@ public class Level
                 CurrentMapState[rangedEnemy.Position.Y, rangedEnemy.Position.X] = TileENUM.RangedEnemyRight;
             }
         }
+        foreach (RangedMiniBoss rangedMiniBoss in InteractablesLists.RangedMiniBossPresent)
+        {
+            if (rangedMiniBoss.IsDead()) continue;
+            CurrentMapState[rangedMiniBoss.Position.Y, rangedMiniBoss.Position.X] = TileENUM.RangedMiniBoss;
+        }
         CurrentMapState[Player.Position.Y, Player.Position.X] = TileENUM.Player;
         //need to get the player position and things, maybe this shoud be in GameManager
     }
@@ -211,6 +227,7 @@ public enum TileENUM
     RangedEnemyDown,
     RangedEnemyLeft,
     RangedEnemyRight,
+    RangedMiniBoss,
     Exit,
     Entrance,
     Chest
