@@ -96,28 +96,40 @@ public class Level
         switch (tile)
         {
             case TileENUM.Empty:
+                Console.ForegroundColor = ConsoleColor.Black;
                 return ' ';
             case TileENUM.Wall:
+                Console.ForegroundColor = ConsoleColor.White;
                 return '█';
             case TileENUM.Player:
+                Console.ForegroundColor = ConsoleColor.Red;
                 return '♦';
             case TileENUM.StandardEnemy:
+                Console.ForegroundColor = ConsoleColor.Green;
                 return '♠';
             case TileENUM.Exit:
+                Console.ForegroundColor = ConsoleColor.Blue;
                 return 'X';
             case TileENUM.Entrance:
+                Console.ForegroundColor = ConsoleColor.White;
                 return 'E';
             case TileENUM.Chest:
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 return '◘';
             case TileENUM.RangedEnemyUp:
+                Console.ForegroundColor = ConsoleColor.Green;
                 return '↑';
             case TileENUM.RangedEnemyDown:
+                Console.ForegroundColor = ConsoleColor.Green;
                 return '↓';
             case TileENUM.RangedEnemyLeft:
+                Console.ForegroundColor = ConsoleColor.Green;
                 return '←';
             case TileENUM.RangedEnemyRight:
+                Console.ForegroundColor = ConsoleColor.Green;
                 return '→';
             case TileENUM.RangedMiniBoss:
+                Console.ForegroundColor = ConsoleColor.Green;
                 return '╬';
             default:
                 throw new ArgumentOutOfRangeException(nameof(tile));

@@ -1,4 +1,6 @@
-﻿public class Player
+﻿using System.Diagnostics;
+
+public class Player
 {
     public Point Position { get; set; }
     public int MaxHP;
@@ -265,6 +267,7 @@
         {
             case AttackAOE.TwoForward:
                 {
+                    if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Wall) break;
                     //point x- x-2
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
                     {
@@ -368,15 +371,37 @@
                 {
                     if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Empty) continue;
                     else if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Wall) break;
-                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.Y, i), out StandardEnemy standardEnemy))
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out StandardEnemy standardEnemy))
                     {
                         standardEnemy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Standard Enemy for {CurrentWeapon.Power} damage");
+                        if (standardEnemy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                        }
+                        break;
                     }
-                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.Y, i), out RangedEnemy rangedEnemy))
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out RangedEnemy rangedEnemy))
                     {
                         rangedEnemy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Ranged Enemy for {CurrentWeapon.Power} damage");
+                        if (rangedEnemy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                        }
+                        break;
                     }
-                    //else
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out RangedMiniBoss rangedMiniBoss))
+                    {
+                        rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Mini-Boss for {CurrentWeapon.Power} damage");
+                        if (rangedMiniBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                        }
+                        break;
+                    }
+                    else { break; }
                 }
                
                 break;
@@ -388,6 +413,7 @@
         {
             case AttackAOE.TwoForward:
                 {
+                    if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Wall) break;
                     //point x+ x+2
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
                     {
@@ -486,6 +512,44 @@
                     }
                 }
                 break;
+            case AttackAOE.Ranged:
+                for (int i = Position.X + 1; i < 24; i++)
+                {
+                    if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Empty) continue;
+                    else if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Wall) break;
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out StandardEnemy standardEnemy))
+                    {
+                        standardEnemy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Standard Enemy for {CurrentWeapon.Power} damage");
+                        if (standardEnemy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                        }
+                        break;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out RangedEnemy rangedEnemy))
+                    {
+                        rangedEnemy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Ranged Enemy for {CurrentWeapon.Power} damage");
+                        if (rangedEnemy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                        }
+                        break;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out RangedMiniBoss rangedMiniBoss))
+                    {
+                        rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Mini-Boss for {CurrentWeapon.Power} damage");
+                        if (rangedMiniBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                        }
+                        break;
+                    }
+                    else { break; }
+                }
+                break;
         }
     }
     public void DetermineTargetsAndAttackUp(AttackAOE weaponAOE)
@@ -494,6 +558,7 @@
         {
             case AttackAOE.TwoForward:
                 {
+                    if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Wall) break;
                     //point y- y-2
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
                     {
@@ -592,6 +657,44 @@
                     }
                 }
                 break;
+            case AttackAOE.Ranged:
+                for (int i = Position.Y - 1; i > 0; i--)
+                {
+                    if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Empty) continue;
+                    else if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Wall) break;
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out StandardEnemy standardEnemy))
+                    {
+                        standardEnemy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Standard Enemy for {CurrentWeapon.Power} damage");
+                        if (standardEnemy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                        }
+                        break;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out RangedEnemy rangedEnemy))
+                    {
+                        rangedEnemy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Ranged Enemy for {CurrentWeapon.Power} damage");
+                        if (rangedEnemy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                        }
+                        break;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out RangedMiniBoss rangedMiniBoss))
+                    {
+                        rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Mini-Boss for {CurrentWeapon.Power} damage");
+                        if (rangedMiniBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                        }
+                        break;
+                    }
+                    else { break; }
+                }
+                break;
         }
     }
     public void DetermineTargetsAndAttackDown(AttackAOE weaponAOE)
@@ -600,6 +703,7 @@
         {
             case AttackAOE.TwoForward:
                 {
+                    if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Wall) break;
                     //point y- y-2
                     foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
                     {
@@ -696,6 +800,44 @@
                             }
                         }
                     }
+                }
+                break;
+            case AttackAOE.Ranged:
+                for (int i = Position.Y + 1; i < 13; i++)
+                {
+                    if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Empty) continue;
+                    else if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Wall) break;
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out StandardEnemy standardEnemy))
+                    {
+                        standardEnemy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Standard Enemy for {CurrentWeapon.Power} damage");
+                        if (standardEnemy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                        }
+                        break;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out RangedEnemy rangedEnemy))
+                    {
+                        rangedEnemy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Ranged Enemy for {CurrentWeapon.Power} damage");
+                        if (rangedEnemy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                        }
+                        break;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out RangedMiniBoss rangedMiniBoss))
+                    {
+                        rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Mini-Boss for {CurrentWeapon.Power} damage");
+                        if (rangedMiniBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                        }
+                        break;
+                    }
+                    else { break; }
                 }
                 break;
         }

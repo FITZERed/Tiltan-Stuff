@@ -1,4 +1,6 @@
-﻿public class InteractablesLists
+﻿using System.Diagnostics;
+
+public class InteractablesLists
 {
     public List<StandardEnemy> StandardEnemiesPresent = new List<StandardEnemy>();
     public List<RangedEnemy> RangedEnemiesPresent = new List<RangedEnemy>();
@@ -8,7 +10,7 @@
     {
         foreach (var enemy in StandardEnemiesPresent)
         {
-            if (enemy.Position == point) 
+            if (enemy.Position.X == point.X && enemy.Position.Y == point.Y) 
             { 
             standardEnemy = enemy;
             return true;
@@ -22,7 +24,7 @@
     {
         foreach (var enemy in RangedEnemiesPresent)
         {
-            if (enemy.Position == point)
+            if (enemy.Position.X == point.X && enemy.Position.Y == point.Y)
             {
                 rangedEnemy = enemy;
                 return true;
@@ -35,7 +37,7 @@
     {
         foreach (var enemy in RangedMiniBossPresent)
         {
-            if (enemy.Position == point)
+            if (enemy.Position.X == point.X && enemy.Position.Y == point.Y)
             {
                 rangedMiniBoss = enemy;
                 return true;

@@ -8,7 +8,10 @@
         this.X = x;
         this.Y = y;
     }
-
+    public override string ToString()
+    {
+        return $"X: {X}, Y: {Y}";
+    }
     public Point(Point point)
     {
         this.X = point.X;

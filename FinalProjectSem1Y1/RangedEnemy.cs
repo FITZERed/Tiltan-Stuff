@@ -17,7 +17,7 @@
     public RangedEnemy(Point position, FaceDirection direction)
     {
         Position = position;
-        MaxHP = 4;
+        MaxHP = 3;
         CurHP = MaxHP;
         State = RangedEnemyState.PrepingShot;
         Direction = direction;
