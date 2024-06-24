@@ -21,6 +21,8 @@ public class Level
             RangedEnemiesStateTracker = RangedEnemyState.PrepingShot;
         }
         PrintCurrentMapState();
+        RefreshMap();
+        PrintCurrentMapState();
     }
 
     public TileENUM[,] BuildInitialMapState(char[,] charMatrix)
@@ -82,6 +84,10 @@ public class Level
                         map[i, j] = TileENUM.RangedMiniBoss;
                         InteractablesLists.RangedMiniBossPresent.Add(new RangedMiniBoss(new Point(j, i)));
                         break;
+                    case 'T':
+                        map[i, j] = TileENUM.TiltanBoss;
+                        InteractablesLists.BossList.Add(new TiltanBoss(new Point(j, i)));
+                        break;
                     default: throw new ArgumentOutOfRangeException(charMatrix[i, j].ToString());
 
 
@@ -131,12 +137,19 @@ public class Level
             case TileENUM.RangedMiniBoss:
                 Console.ForegroundColor = ConsoleColor.Green;
                 return '╬';
+            case TileENUM.TiltanBoss:
+                Console.ForegroundColor = ConsoleColor.Green;
+                return '♣';
+            case TileENUM.TiltanBossSide:
+                Console.ForegroundColor = ConsoleColor.Green;
+                return '♣';
             default:
                 throw new ArgumentOutOfRangeException(nameof(tile));
         }
     }
     //♦
     //♠
+    //♣
     //◘
     //↑
     //↓
@@ -205,6 +218,19 @@ public class Level
             if (rangedMiniBoss.IsDead()) continue;
             CurrentMapState[rangedMiniBoss.Position.Y, rangedMiniBoss.Position.X] = TileENUM.RangedMiniBoss;
         }
+        foreach (TiltanBoss tiltanBoss in InteractablesLists.BossList)
+        {
+            if (tiltanBoss.IsDead()) continue;
+            CurrentMapState[tiltanBoss.Position.Y, tiltanBoss.Position.X] = TileENUM.TiltanBoss;
+            CurrentMapState[tiltanBoss.Position.Y + 1, tiltanBoss.Position.X + 1] = TileENUM.TiltanBossSide;
+            CurrentMapState[tiltanBoss.Position.Y + 1, tiltanBoss.Position.X]     = TileENUM.TiltanBossSide;
+            CurrentMapState[tiltanBoss.Position.Y + 1, tiltanBoss.Position.X - 1] = TileENUM.TiltanBossSide;
+            CurrentMapState[tiltanBoss.Position.Y, tiltanBoss.Position.X + 1]     = TileENUM.TiltanBossSide;
+            CurrentMapState[tiltanBoss.Position.Y, tiltanBoss.Position.X - 1]     = TileENUM.TiltanBossSide;
+            CurrentMapState[tiltanBoss.Position.Y - 1, tiltanBoss.Position.X + 1] = TileENUM.TiltanBossSide;
+            CurrentMapState[tiltanBoss.Position.Y - 1, tiltanBoss.Position.X]     = TileENUM.TiltanBossSide;
+            CurrentMapState[tiltanBoss.Position.Y - 1, tiltanBoss.Position.X - 1] = TileENUM.TiltanBossSide;
+        }
         CurrentMapState[Player.Position.Y, Player.Position.X] = TileENUM.Player;
         //need to get the player position and things, maybe this shoud be in GameManager
     }
@@ -242,5 +268,7 @@ public enum TileENUM
     RangedMiniBoss,
     Exit,
     Entrance,
-    Chest
+    Chest,
+    TiltanBoss,
+    TiltanBossSide
 }

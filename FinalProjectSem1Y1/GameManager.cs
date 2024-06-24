@@ -7,7 +7,7 @@ public  static class GameManager
     public static Inventory Inventory;
     public static GameLog GameLog;
     public static HUD Hud;
-    public static int levelNum = 1;
+    public static int levelNum = 10;
 
     public static void StartGame()
     {
@@ -68,12 +68,22 @@ public  static class GameManager
             CurrentLevel.RefreshMap();
             Hud.PrintMonitors();
         }
+        foreach (TiltanBoss tiltanBoss in CurrentLevel.InteractablesLists.BossList)
+        {
+            tiltanBoss.AdvanceBossMoveCounter();
+            CurrentLevel.RefreshMap();
+            Hud.PrintMonitors();
+            tiltanBoss.BossAttack();
+            CurrentLevel.RefreshMap();
+            Hud.PrintMonitors();
+        }
     }
     public static void RefreshEnemyLists()
     {
         List<StandardEnemy> SEList = new List<StandardEnemy>();
         List<RangedEnemy> REList = new List<RangedEnemy>();
         List<RangedMiniBoss> RMBList = new List<RangedMiniBoss>();
+        List<TiltanBoss> TBList = new List<TiltanBoss>();
         foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
         {
             if (!standardEnemy.IsDead())
@@ -95,9 +105,17 @@ public  static class GameManager
                 RMBList.Add(rangedMiniBoss);
             }
         }
+        foreach (TiltanBoss tiltanBoss in CurrentLevel.InteractablesLists.BossList)
+        {
+            if (!tiltanBoss.IsDead())
+            {
+                TBList.Add(tiltanBoss);
+            }
+        }
         CurrentLevel.InteractablesLists.StandardEnemiesPresent = SEList;
         CurrentLevel.InteractablesLists.RangedEnemiesPresent = REList;
         CurrentLevel.InteractablesLists.RangedMiniBossPresent = RMBList;
+        CurrentLevel.InteractablesLists.BossList = TBList;
     }
     public static void AdvanceLevel()
     {

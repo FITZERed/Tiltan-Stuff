@@ -1,62 +1,128 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-public class StandardEnemy
+﻿public class HeavyEnemy
 {
-
     public Point Position { get; set; }
     public int MaxHP;
     public int CurHP;
     public int Damage;
     private Player Player { get { return GameManager.Player; } }
+    private HeavyEnemyAttackState attackState;
     public bool IsDead()
     {
         if (CurHP <= 0)
             return true;
         return false;
     }
-
-    public StandardEnemy(Point point)
+    public HeavyEnemy(Point point)
     {
         Position = point;
-        MaxHP = 3;
+        MaxHP = 12;
         CurHP = MaxHP;
-        Damage = 1;
-        //Weapon = new Weapon
+        Damage = 6;
+        attackState = HeavyEnemyAttackState.NotReady;
     }
-    public void EnemyAttack()
-    {
-        //make a pattern for this system, either enemies only attack from range 1 or they check if the player is within reach for complex weapons
-        if (IsDead()) return;
-        if (CurrentLevel.CurrentMapState[Position.Y - 1, Position.X] == TileENUM.Player)
-        {
-            Player.CurHP -= Damage;
-            GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
-            return;
-        }
-        else if (CurrentLevel.CurrentMapState[Position.Y + 1, Position.X] == TileENUM.Player)
-        {
-            Player.CurHP -= Damage;
-            GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
-            return;
-        }
-        else if (CurrentLevel.CurrentMapState[Position.Y, Position.X - 1] == TileENUM.Player)
-        {
-            Player.CurHP -= Damage;
-            GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
-            return;
-        }
-        else if (CurrentLevel.CurrentMapState[Position.Y, Position.X + 1] == TileENUM.Player)
-        {
-            Player.CurHP -= Damage;
-            GameManager.GameLog.LogEvent("Standard Enemy has hit Player for 1 damage");
-            return;
-        }
-        else return;
 
-    }
-    public void EnemyMove()
+    public void HeavyEnemyAttack()
     {
-        if (IsDead()) {  return; }
+        if (IsDead()) return;
+        if (attackState == HeavyEnemyAttackState.AttackReadyLeft) PerformAttackLeft();
+        else if (attackState == HeavyEnemyAttackState.AttackReadyRight) PerformAttackRight();
+        else if (attackState == HeavyEnemyAttackState.AttackReadyUp) PerformAttackUp();
+        else if (attackState == HeavyEnemyAttackState.AttackReadyDown) PerformAttackDown();
+        CheckIsPlayerInAttackRange();
+    }
+    public void CheckIsPlayerInAttackRange()
+    {
+        if (IsPlayerLeft()) 
+        {
+            attackState = HeavyEnemyAttackState.AttackReadyLeft;
+            GameManager.GameLog.LogEvent("Heavy Enemy is charging a ← attack");
+            return;
+        }
+        else if (IsPlayerRight())
+        {
+            attackState = HeavyEnemyAttackState.AttackReadyRight;
+            GameManager.GameLog.LogEvent("Heavy Enemy is charging a → attack");
+            return;
+        }
+        else if (IsPLayerUp())
+        {
+            attackState = HeavyEnemyAttackState.AttackReadyUp;
+            GameManager.GameLog.LogEvent("Heavy Enemy is charging a ↑ attack");
+            return;
+        }
+        else if (IsPlayerDown())
+        {
+            attackState = HeavyEnemyAttackState.AttackReadyDown;
+            GameManager.GameLog.LogEvent("Heavy Enemy is charging a ↓ attack");
+            return;
+        }
+        else attackState = HeavyEnemyAttackState.NotReady; return;
+    }
+    public void PerformAttackLeft()
+    {
+        if ((Player.Position.X == Position.X - 1 && Player.Position.Y == Position.Y) || Player.Position.X == Position.X - 2 && (Player.Position.Y <= Position.Y + 1 && Player.Position.Y >= Position.Y - 1))
+        {
+            Player.CurHP -= Damage;
+        }
+    }
+    public void PerformAttackRight()
+    {
+        if ((Player.Position.X == Position.X + 1 && Player.Position.Y == Position.Y) || Player.Position.X == Position.X + 2 && (Player.Position.Y <= Position.Y + 1 && Player.Position.Y >= Position.Y - 1))
+        {
+            Player.CurHP -= Damage;
+        }
+    }
+    public void PerformAttackUp()
+    {
+        if ((Player.Position.Y == Position.Y - 1 && Player.Position.X == Position.X) || Player.Position.Y == Position.Y - 2 && (Player.Position.X <= Position.X + 1 && Player.Position.X >= Position.X - 1))
+        {
+            Player.CurHP -= Damage;
+        }
+    }
+    public void PerformAttackDown()
+    {
+        if ((Player.Position.Y == Position.Y + 1 && Player.Position.X == Position.X) || Player.Position.Y == Position.Y + 2 && (Player.Position.X <= Position.X + 1 && Player.Position.X >= Position.X - 1))
+        {
+            Player.CurHP -= Damage;
+        }
+    }
+    public bool IsPlayerLeft()
+    {
+        if ((Player.Position.X == Position.X - 1 && Player.Position.Y == Position.Y) || Player.Position.X == Position.X - 2 && (Player.Position.Y <= Position.Y + 1 && Player.Position.Y >= Position.Y - 1))
+        {
+            return true;
+        }
+        return false;
+    }
+    public bool IsPlayerRight()
+    {
+        if ((Player.Position.X == Position.X + 1 && Player.Position.Y == Position.Y) || Player.Position.X == Position.X + 2 && (Player.Position.Y <= Position.Y + 1 && Player.Position.Y >= Position.Y - 1))
+        {
+            return true;
+        }
+        return false;
+    }
+    public bool IsPLayerUp()
+    {
+        if ((Player.Position.Y == Position.Y - 1 && Player.Position.X == Position.X) || Player.Position.Y == Position.Y - 2 && (Player.Position.X <= Position.X + 1 && Player.Position.X >= Position.X - 1))
+        {
+            return true;
+        }
+        return false;
+    }
+    public bool IsPlayerDown()
+    {
+        if ((Player.Position.Y == Position.Y + 1 && Player.Position.X == Position.X) || Player.Position.Y == Position.Y + 2 && (Player.Position.X <= Position.X + 1 && Player.Position.X >= Position.X - 1))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void HeavyEnemyMove()
+    {
+        if (IsDead()) { return; }
+        if (attackState != HeavyEnemyAttackState.NotReady) { return; }
         string moveDirection = DetermineMovementDirection();
         if (moveDirection == "NoMove") return;
         if (moveDirection == "up") { Position.Y--; return; }
@@ -146,19 +212,19 @@ public class StandardEnemy
             priorityRight -= 50;
         }
 
-        if (Player.Position.Y > Position.Y)
+        if (CurrentLevel.Player.Position.Y > Position.Y)
         {
             priorityDown += 1;
         }
-        if (Player.Position.Y < Position.Y)
+        if (CurrentLevel.Player.Position.Y < Position.Y)
         {
             priorityUp += 1;
         }
-        if (Player.Position.X > Position.X)
+        if (CurrentLevel.Player.Position.X > Position.X)
         {
             priorityRight += 1;
         }
-        if (Player.Position.X < Position.X)
+        if (CurrentLevel.Player.Position.X < Position.X)
         {
             priorityLeft += 1;
         }
@@ -186,4 +252,13 @@ public class StandardEnemy
 
         throw new Exception("enemy movement failed");
     }
+}
+
+public enum HeavyEnemyAttackState
+{
+    NotReady,
+    AttackReadyLeft,
+    AttackReadyRight,
+    AttackReadyUp,
+    AttackReadyDown
 }

@@ -314,6 +314,24 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 2, Position.Y), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -364,6 +382,33 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y - 1), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y + 1), out TiltanBoss tiltanBoss2))
+                    {
+                        tiltanBoss2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
                 }
                 break;
             case AttackAOE.Ranged:
@@ -398,6 +443,16 @@ public class Player
                         if (rangedMiniBoss.IsDead())
                         {
                             GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                        }
+                        break;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
                         }
                         break;
                     }
@@ -460,6 +515,24 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 2, Position.Y), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -510,6 +583,33 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y - 1), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y + 1), out TiltanBoss tiltanBoss2))
+                    {
+                        tiltanBoss2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
                 }
                 break;
             case AttackAOE.Ranged:
@@ -544,6 +644,16 @@ public class Player
                         if (rangedMiniBoss.IsDead())
                         {
                             GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                        }
+                        break;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
                         }
                         break;
                     }
@@ -605,6 +715,24 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 1), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 2), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -655,6 +783,33 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y - 1), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 1), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y - 1), out TiltanBoss tiltanBoss2))
+                    {
+                        tiltanBoss2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
                 }
                 break;
             case AttackAOE.Ranged:
@@ -689,6 +844,16 @@ public class Player
                         if (rangedMiniBoss.IsDead())
                         {
                             GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                        }
+                        break;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
                         }
                         break;
                     }
@@ -750,6 +915,24 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 1), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 2), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
                 }
                 break;
             case AttackAOE.ThreeInFront:
@@ -800,6 +983,33 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y + 1), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 1), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y + 1), out TiltanBoss tiltanBoss2))
+                    {
+                        tiltanBoss2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
                 }
                 break;
             case AttackAOE.Ranged:
@@ -834,6 +1044,16 @@ public class Player
                         if (rangedMiniBoss.IsDead())
                         {
                             GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                        }
+                        break;
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
                         }
                         break;
                     }

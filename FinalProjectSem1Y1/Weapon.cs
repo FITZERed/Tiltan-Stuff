@@ -25,6 +25,11 @@
                 AttackAOE = AttackAOE.Ranged;
                 WeaponName = "Shortbow";
                 break;
+            case WeaponType.LongBow:
+                Power = 4;
+                AttackAOE = AttackAOE.Ranged;
+                WeaponName = "Longbow";
+                break;
             case WeaponType.LegendarySword:
                 Power = 5;
                 AttackAOE = AttackAOE.PlusShape;
@@ -49,6 +54,7 @@ public enum WeaponType
     Spear,
     Axe,
     ShortBow,
+    LongBow,
     LegendarySword,
     Dagger
 }

@@ -3,7 +3,7 @@
     public Point Position;
     public int MaxHP;
     public int CurHP;
-    public Weapon Weapon;
+    public int Damage;
     private RangedEnemyState State;
     public FaceDirection Direction;
     private Player Player { get { return GameManager.Player; } }
@@ -19,6 +19,7 @@
         Position = position;
         MaxHP = 3;
         CurHP = MaxHP;
+        Damage = 2;
         State = RangedEnemyState.PrepingShot;
         Direction = direction;
     }
@@ -52,7 +53,7 @@
                         break;
                     else if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Player) 
                     {
-                        Player.CurHP -= 2;
+                        Player.CurHP -= Damage;
                         break;
                     }
                     else { break; }
@@ -71,7 +72,7 @@
                         break;
                     else if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Player)
                     {
-                        Player.CurHP -= 2;
+                        Player.CurHP -= Damage;
                         break;
                     }
                     else { break; }
@@ -86,7 +87,7 @@
                         break;
                     else if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Player)
                     {
-                        Player.CurHP -= 2;
+                        Player.CurHP -= Damage;
                         break;
                     }
                     else { break; }
@@ -101,7 +102,7 @@
                         break;
                     else if (CurrentLevel.CurrentMapState[i, Position.X] == TileENUM.Player)
                     {
-                        Player.CurHP -= 2;
+                        Player.CurHP -= Damage;
                         break;
                     }
                     else { break; }
