@@ -7,7 +7,7 @@ public  static class GameManager
     public static Inventory Inventory;
     public static GameLog GameLog;
     public static HUD Hud;
-    public static int levelNum = 10;
+    public static int levelNum = 1;
 
     public static void StartGame()
     {
