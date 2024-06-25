@@ -77,5 +77,6 @@ public class InteractablesLists
 
     }
 
+    public List<Trap> TrapsPresent = new List<Trap>();
     public List<Chest> ChestsPresent = new List<Chest>();
 }

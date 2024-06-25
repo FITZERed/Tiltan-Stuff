@@ -28,14 +28,25 @@ public class Player
         {
             case ConsoleKey.W:
             case ConsoleKey.UpArrow:
-                Position.Y--;
-                if (CurrentLevel.CurrentMapState[Position.Y, Position.X] == TileENUM.Exit)
-                {
-                    TryExit();
-                }
-                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance) Position.Y++;
-                //need to check if new tile is valid, not sure how to access CurrentMapState from player...
-                break;
+                    Position.Y--;
+                    if (CurrentLevel.CurrentMapState[Position.Y, Position.X] == TileENUM.Exit)
+                    {
+                        TryExit();
+                    }
+                    else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.HiddenTrap && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.VisibleTrap) 
+                        Position.Y++;
+                    if (CurrentLevel.CurrentMapState[Position.Y, Position.X] == TileENUM.VisibleTrap)
+                    {
+                        foreach (Trap trap in CurrentLevel.InteractablesLists.TrapsPresent)
+                        {
+                            if (trap.Position.X == Position.X && trap.Position.Y == Position.Y)
+                            {
+                                trap.TriggerTrap();
+                            }
+                        }
+                    }
+                    DetectTraps();
+                    break;
             case ConsoleKey.S:
             case ConsoleKey.DownArrow:
                 Position.Y++;
@@ -43,7 +54,19 @@ public class Player
                 {
                     TryExit();
                 }
-                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance) Position.Y--;
+                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.HiddenTrap && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.VisibleTrap) 
+                    Position.Y--;
+                if (CurrentLevel.CurrentMapState[Position.Y, Position.X] == TileENUM.VisibleTrap)
+                {
+                    foreach (Trap trap in CurrentLevel.InteractablesLists.TrapsPresent)
+                    {
+                        if (trap.Position.X == Position.X && trap.Position.Y == Position.Y)
+                        {
+                            trap.TriggerTrap();
+                        }
+                    }
+                }
+                DetectTraps();
                 break;
             case ConsoleKey.D:
             case ConsoleKey.RightArrow:
@@ -52,7 +75,19 @@ public class Player
                 {
                     TryExit();
                 }
-                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance) Position.X--;
+                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.HiddenTrap && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.VisibleTrap) 
+                    Position.X--;
+                if (CurrentLevel.CurrentMapState[Position.Y, Position.X] == TileENUM.VisibleTrap)
+                {
+                    foreach (Trap trap in CurrentLevel.InteractablesLists.TrapsPresent)
+                    {
+                        if (trap.Position.X == Position.X && trap.Position.Y == Position.Y)
+                        {
+                            trap.TriggerTrap();
+                        }
+                    }
+                }
+                DetectTraps();
                 break;
             case ConsoleKey.A:
             case ConsoleKey.LeftArrow:
@@ -61,7 +96,19 @@ public class Player
                 {
                     TryExit();
                 }
-                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance) Position.X++;
+                else if (CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Empty && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.Entrance && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.HiddenTrap && CurrentLevel.CurrentMapState[Position.Y, Position.X] != TileENUM.VisibleTrap) 
+                    Position.X++;
+                if (CurrentLevel.CurrentMapState[Position.Y, Position.X] == TileENUM.VisibleTrap)
+                {
+                    foreach (Trap trap in CurrentLevel.InteractablesLists.TrapsPresent)
+                    {
+                        if (trap.Position.X == Position.X && trap.Position.Y == Position.Y)
+                        {
+                            trap.TriggerTrap();
+                        }
+                    }
+                }
+                DetectTraps();
                 break;
             case ConsoleKey.Spacebar:
                 {
@@ -93,9 +140,23 @@ public class Player
         if (CurrentLevel.Exit.IsAvailable())
         {
             levelNum++;
+            if (levelNum == 11)
+            {
+                return;
+            }
             AdvanceLevel();
         }
         else { GameManager.GameLog.LogEvent("Exit Unavailable, there are still enemies present."); }
+    }
+    public void DetectTraps()
+    {
+        foreach (Trap trap in CurrentLevel.InteractablesLists.TrapsPresent)
+        {
+            if (trap.Position.X >= Position.X - 1 && trap.Position.X <= Position.X + 1 && trap.Position.Y >= Position.Y - 1 && trap.Position.Y <= Position.Y + 1)
+            {
+                trap.DetectTrap();
+            }
+        }
     }
     public void UseHealPotion()
     {
@@ -127,6 +188,9 @@ public class Player
                 break;
             case ConsoleKey.D4:
                 temp = 3;
+                break;
+            case ConsoleKey.D5:
+                temp = 4;
                 break;
             default: temp = 0; break;
         }
@@ -228,6 +292,15 @@ public class Player
                 GameManager.Inventory.GainWeapon(WeaponType.ShortBow);
                 chest.LootChest();
                 break;
+            case ChestContent.LongBow:
+                GameManager.Inventory.GainWeapon(WeaponType.LongBow);
+                chest.LootChest();
+                break;
+            case ChestContent.LegendSword:
+                GameManager.Inventory.GainWeapon(WeaponType.LegendarySword);
+                GameManager.GameLog.LogEvent($"Player has obtained \"FireLight\", the legendary sword");
+                chest.LootChest();
+                break;
                 //Add cases for different chest contents
             default: break;
         }
@@ -260,7 +333,7 @@ public class Player
         }
     }
 
-    
+
     public void DetermineTargetsAndAttackLeft(AttackAOE weaponAOE)
     {
         switch (weaponAOE)
@@ -312,6 +385,24 @@ public class Player
                                     GameManager.GameLog.LogEvent("Mini-Boss defeated");
                                 }
                             }
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y), out HeavyEnemy heavyEnemy))
+                    {
+                        heavyEnemy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavyEnemy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 2, Position.Y), out HeavyEnemy heavyEnemy1))
+                    {
+                        heavyEnemy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavyEnemy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
                         }
                     }
                     if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y), out TiltanBoss tiltanBoss))
@@ -382,6 +473,33 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y - 1), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y + 1), out HeavyEnemy heavy2))
+                    {
+                        heavy2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
                     if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y), out TiltanBoss tiltanBoss))
                     {
                         tiltanBoss.CurHP -= CurrentWeapon.Power;
@@ -412,7 +530,7 @@ public class Player
                 }
                 break;
             case AttackAOE.Ranged:
-                for (int i = Position.X - 1; i > 0; i--) 
+                for (int i = Position.X - 1; i > 0; i--)
                 {
                     if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Empty) continue;
                     else if (CurrentLevel.CurrentMapState[Position.Y, i] == TileENUM.Wall) break;
@@ -446,6 +564,16 @@ public class Player
                         }
                         break;
                     }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy defeated");
+                        }
+                        break;
+                    }
                     else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out TiltanBoss tiltanBoss))
                     {
                         tiltanBoss.CurHP -= CurrentWeapon.Power;
@@ -458,8 +586,128 @@ public class Player
                     }
                     else { break; }
                 }
-               
                 break;
+            case AttackAOE.PlusShape:
+                {
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
+                    {
+                        if ((standardEnemy.Position.X == Position.X - 1 && (standardEnemy.Position.Y == Position.Y || standardEnemy.Position.Y == Position.Y - 1 || standardEnemy.Position.Y == Position.Y + 1)) || (standardEnemy.Position.X == Position.X - 2 && standardEnemy.Position.Y == Position.Y))
+                        {
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Standard Enemy for {CurrentWeapon.Power} damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if ((rangedEnemy.Position.X == Position.X - 1 && (rangedEnemy.Position.Y == Position.Y || rangedEnemy.Position.Y == Position.Y - 1 || rangedEnemy.Position.Y == Position.Y + 1)) || (rangedEnemy.Position.X == Position.X - 2 && rangedEnemy.Position.Y == Position.Y))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Ranged Enemy for {CurrentWeapon.Power} damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if ((rangedMiniBoss.Position.X == Position.X - 1 && (rangedMiniBoss.Position.Y == Position.Y || rangedMiniBoss.Position.Y == Position.Y - 1 || rangedMiniBoss.Position.Y == Position.Y + 1)) || (rangedMiniBoss.Position.X == Position.X - 2 && rangedMiniBoss.Position.Y == Position.Y))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Mini-Boss for {CurrentWeapon.Power} damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                                }
+                            }
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y - 1), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y + 1), out HeavyEnemy heavy2))
+                    {
+                        heavy2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 2, Position.Y), out HeavyEnemy heavy3))
+                    {
+                        heavy3.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy3.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y - 1), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y + 1), out TiltanBoss tiltanBoss2))
+                    {
+                        tiltanBoss2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 2, Position.Y), out TiltanBoss tiltanBoss3))
+                    {
+                        tiltanBoss3.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss3.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    break;
+                }
         }
     }
     public void DetermineTargetsAndAttackRight(AttackAOE weaponAOE)
@@ -513,6 +761,24 @@ public class Player
                                     GameManager.GameLog.LogEvent("Mini-Boss defeated");
                                 }
                             }
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 2, Position.Y), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
                         }
                     }
                     if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y), out TiltanBoss tiltanBoss))
@@ -583,6 +849,33 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y - 1), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y + 1), out HeavyEnemy heavy2))
+                    {
+                        heavy2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
                     if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y), out TiltanBoss tiltanBoss))
                     {
                         tiltanBoss.CurHP -= CurrentWeapon.Power;
@@ -647,6 +940,16 @@ public class Player
                         }
                         break;
                     }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                        break;
+                    }
                     else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(i, Position.Y), out TiltanBoss tiltanBoss))
                     {
                         tiltanBoss.CurHP -= CurrentWeapon.Power;
@@ -660,6 +963,127 @@ public class Player
                     else { break; }
                 }
                 break;
+            case AttackAOE.PlusShape:
+                {
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
+                    {
+                        if ((standardEnemy.Position.X == Position.X + 1 && (standardEnemy.Position.Y == Position.Y || standardEnemy.Position.Y == Position.Y - 1 || standardEnemy.Position.Y == Position.Y + 1)) || (standardEnemy.Position.X == Position.X + 2 && standardEnemy.Position.Y == Position.Y))
+                        {
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Standard Enemy for {CurrentWeapon.Power} damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if ((rangedEnemy.Position.X == Position.X + 1 && (rangedEnemy.Position.Y == Position.Y || rangedEnemy.Position.Y == Position.Y - 1 || rangedEnemy.Position.Y == Position.Y + 1)) || (rangedEnemy.Position.X == Position.X + 2 && rangedEnemy.Position.Y == Position.Y))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Ranged Enemy for {CurrentWeapon.Power} damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if ((rangedMiniBoss.Position.X == Position.X + 1 && (rangedMiniBoss.Position.Y == Position.Y || rangedMiniBoss.Position.Y == Position.Y - 1 || rangedMiniBoss.Position.Y == Position.Y + 1)) || (rangedMiniBoss.Position.X == Position.X + 2 && rangedMiniBoss.Position.Y == Position.Y))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Mini-Boss for {CurrentWeapon.Power} damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                                }
+                            }
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y - 1), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y + 1), out HeavyEnemy heavy2))
+                    {
+                        heavy2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 2, Position.Y), out HeavyEnemy heavy3))
+                    {
+                        heavy3.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy3.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y - 1), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y + 1), out TiltanBoss tiltanBoss2))
+                    {
+                        tiltanBoss2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 2, Position.Y), out TiltanBoss tiltanBoss3))
+                    {
+                        tiltanBoss3.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss3.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    break;
+                }
         }
     }
     public void DetermineTargetsAndAttackUp(AttackAOE weaponAOE)
@@ -713,6 +1137,24 @@ public class Player
                                     GameManager.GameLog.LogEvent("Mini-Boss defeated");
                                 }
                             }
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 1), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 2), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
                         }
                     }
                     if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 1), out TiltanBoss tiltanBoss))
@@ -783,6 +1225,33 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y - 1), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 1), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y - 1), out HeavyEnemy heavy2))
+                    {
+                        heavy2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
                     if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y - 1), out TiltanBoss tiltanBoss))
                     {
                         tiltanBoss.CurHP -= CurrentWeapon.Power;
@@ -847,6 +1316,16 @@ public class Player
                         }
                         break;
                     }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                        break;
+                    }
                     else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out TiltanBoss tiltanBoss))
                     {
                         tiltanBoss.CurHP -= CurrentWeapon.Power;
@@ -860,6 +1339,127 @@ public class Player
                     else { break; }
                 }
                 break;
+            case AttackAOE.PlusShape:
+                {
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
+                    {
+                        if ((standardEnemy.Position.Y == Position.Y - 1 && (standardEnemy.Position.X == Position.X || standardEnemy.Position.X == Position.X - 1 || standardEnemy.Position.X == Position.X + 1)) || (standardEnemy.Position.Y == Position.Y - 2 && standardEnemy.Position.X == Position.X))
+                        {
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Standard Enemy for {CurrentWeapon.Power} damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if ((rangedEnemy.Position.Y == Position.Y - 1 && (rangedEnemy.Position.X == Position.X || rangedEnemy.Position.X == Position.X - 1 || rangedEnemy.Position.X == Position.X + 1)) || (rangedEnemy.Position.Y == Position.Y - 2 && rangedEnemy.Position.X == Position.X))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Ranged Enemy for {CurrentWeapon.Power} damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if ((rangedMiniBoss.Position.Y == Position.Y - 1 && (rangedMiniBoss.Position.X == Position.X || rangedMiniBoss.Position.X == Position.X - 1 || rangedMiniBoss.Position.X == Position.X + 1)) || (rangedMiniBoss.Position.Y == Position.Y - 2 && rangedMiniBoss.Position.X == Position.X))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Mini-Boss for {CurrentWeapon.Power} damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                                }
+                            }
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 1), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y - 1), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y - 1), out HeavyEnemy heavy2))
+                    {
+                        heavy2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 2), out HeavyEnemy heavy3))
+                    {
+                        heavy3.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy3.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 1), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y - 1), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y - 1), out TiltanBoss tiltanBoss2))
+                    {
+                        tiltanBoss2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y - 2), out TiltanBoss tiltanBoss3))
+                    {
+                        tiltanBoss3.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss3.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    break;
+                }
         }
     }
     public void DetermineTargetsAndAttackDown(AttackAOE weaponAOE)
@@ -913,6 +1513,24 @@ public class Player
                                     GameManager.GameLog.LogEvent("Mini-Boss defeated");
                                 }
                             }
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 1), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 2), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
                         }
                     }
                     if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 1), out TiltanBoss tiltanBoss))
@@ -983,6 +1601,33 @@ public class Player
                             }
                         }
                     }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y + 1), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 1), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y + 1), out HeavyEnemy heavy2))
+                    {
+                        heavy2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
                     if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y + 1), out TiltanBoss tiltanBoss))
                     {
                         tiltanBoss.CurHP -= CurrentWeapon.Power;
@@ -1047,6 +1692,16 @@ public class Player
                         }
                         break;
                     }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                        break;
+                    }
                     else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, i), out TiltanBoss tiltanBoss))
                     {
                         tiltanBoss.CurHP -= CurrentWeapon.Power;
@@ -1060,6 +1715,127 @@ public class Player
                     else { break; }
                 }
                 break;
+            case AttackAOE.PlusShape:
+                {
+                    foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
+                    {
+                        if ((standardEnemy.Position.Y == Position.Y + 1 && (standardEnemy.Position.X == Position.X || standardEnemy.Position.X == Position.X - 1 || standardEnemy.Position.X == Position.X + 1)) || (standardEnemy.Position.Y == Position.Y + 2 && standardEnemy.Position.X == Position.X))
+                        {
+                            if (!standardEnemy.IsDead())
+                            {
+                                standardEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Standard Enemy for {CurrentWeapon.Power} damage");
+                                if (standardEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Standard Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedEnemy rangedEnemy in CurrentLevel.InteractablesLists.RangedEnemiesPresent)
+                    {
+                        if ((rangedEnemy.Position.Y == Position.Y + 1 && (rangedEnemy.Position.X == Position.X || rangedEnemy.Position.X == Position.X - 1 || rangedEnemy.Position.X == Position.X + 1)) || (rangedEnemy.Position.Y == Position.Y + 2 && rangedEnemy.Position.X == Position.X))
+                        {
+                            if (!rangedEnemy.IsDead())
+                            {
+                                rangedEnemy.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Ranged Enemy for {CurrentWeapon.Power} damage");
+                                if (rangedEnemy.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Ranged Enemy defeated");
+                                }
+                            }
+                        }
+                    }
+                    foreach (RangedMiniBoss rangedMiniBoss in CurrentLevel.InteractablesLists.RangedMiniBossPresent)
+                    {
+                        if ((rangedMiniBoss.Position.Y == Position.Y + 1 && (rangedMiniBoss.Position.X == Position.X || rangedMiniBoss.Position.X == Position.X - 1 || rangedMiniBoss.Position.X == Position.X + 1)) || (rangedMiniBoss.Position.Y == Position.Y + 2 && rangedMiniBoss.Position.X == Position.X))
+                        {
+                            if (!rangedMiniBoss.IsDead())
+                            {
+                                rangedMiniBoss.CurHP -= CurrentWeapon.Power;
+                                GameManager.GameLog.LogEvent($"Player has hit Mini-Boss for {CurrentWeapon.Power} damage");
+                                if (rangedMiniBoss.IsDead())
+                                {
+                                    GameManager.GameLog.LogEvent("Mini-Boss defeated");
+                                }
+                            }
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 1), out HeavyEnemy heavy))
+                    {
+                        heavy.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y + 1), out HeavyEnemy heavy1))
+                    {
+                        heavy1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y + 1), out HeavyEnemy heavy2))
+                    {
+                        heavy2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 2), out HeavyEnemy heavy3))
+                    {
+                        heavy3.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Heavy for {CurrentWeapon.Power} damage");
+                        if (heavy3.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Heavy was defeated");
+                        }
+                    }
+                    if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 1), out TiltanBoss tiltanBoss))
+                    {
+                        tiltanBoss.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X + 1, Position.Y + 1), out TiltanBoss tiltanBoss1))
+                    {
+                        tiltanBoss1.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss1.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X - 1, Position.Y + 1), out TiltanBoss tiltanBoss2))
+                    {
+                        tiltanBoss2.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss2.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    else if (CurrentLevel.InteractablesLists.FindEnemy(new Point(Position.X, Position.Y + 2), out TiltanBoss tiltanBoss3))
+                    {
+                        tiltanBoss3.CurHP -= CurrentWeapon.Power;
+                        GameManager.GameLog.LogEvent($"Player has hit Tiltan for {CurrentWeapon.Power} damage");
+                        if (tiltanBoss3.IsDead())
+                        {
+                            GameManager.GameLog.LogEvent("Tiltan was defeated");
+                        }
+                    }
+                    break;
+                }
         }
     }
 }

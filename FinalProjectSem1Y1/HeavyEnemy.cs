@@ -64,6 +64,7 @@
         {
             Player.CurHP -= Damage;
         }
+        attackState = HeavyEnemyAttackState.NotReady;
     }
     public void PerformAttackRight()
     {
@@ -71,6 +72,7 @@
         {
             Player.CurHP -= Damage;
         }
+        attackState = HeavyEnemyAttackState.NotReady;
     }
     public void PerformAttackUp()
     {
@@ -78,6 +80,7 @@
         {
             Player.CurHP -= Damage;
         }
+        attackState = HeavyEnemyAttackState.NotReady;
     }
     public void PerformAttackDown()
     {
@@ -85,6 +88,7 @@
         {
             Player.CurHP -= Damage;
         }
+        attackState = HeavyEnemyAttackState.NotReady;
     }
     public bool IsPlayerLeft()
     {

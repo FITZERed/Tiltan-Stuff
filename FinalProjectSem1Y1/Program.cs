@@ -2,6 +2,15 @@
 {
     static void Main(string[] args)
     {
-        GameManager.StartGame();
+        while (true)
+        {
+            GameManager.StartScreen.DisplayStartScreen();
+            GameManager.StartGame();
+            if (GameManager.levelNum > 10)
+            {
+                GameManager.VictoryScreen.DisplayVictoryScreen();
+            }
+            else GameManager.DeathScreen.DisplayDeathScreen();
+        }
     }
 }

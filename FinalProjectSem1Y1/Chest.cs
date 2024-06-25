@@ -20,5 +20,6 @@ public enum ChestContent
     HealingPotion,
     Axe,
     LegendSword,
-    ShortBow
+    ShortBow,
+    LongBow
 }

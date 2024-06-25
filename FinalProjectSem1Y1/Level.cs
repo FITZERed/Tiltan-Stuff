@@ -47,7 +47,8 @@ public class Level
                         InteractablesLists.StandardEnemiesPresent.Add(new StandardEnemy(new Point(j, i)));
                             break;
                     case '█':
-                        map[i, j] = TileENUM.Wall; break;
+                        map[i, j] = TileENUM.Wall; 
+                        break;
                     case 'X':
                         map[i, j] = TileENUM.Exit;
                         Exit = new Exit(new Point(j, i));
@@ -63,6 +64,14 @@ public class Level
                     case 'b':
                         map[i, j] = TileENUM.Chest;
                         InteractablesLists.ChestsPresent.Add(new Chest(new Point(j, i), ChestContent.ShortBow));
+                        break;
+                    case 'B':
+                        map[i, j] = TileENUM.Chest;
+                        InteractablesLists.ChestsPresent.Add(new Chest(new Point(j, i), ChestContent.LongBow));
+                        break;
+                    case 'S':
+                        map[i, j] = TileENUM.Chest;
+                        InteractablesLists.ChestsPresent.Add(new Chest(new Point(j, i), ChestContent.LegendSword));
                         break;
                     case 'i':
                         map[i, j] = TileENUM.RangedEnemyUp;
@@ -84,9 +93,17 @@ public class Level
                         map[i, j] = TileENUM.RangedMiniBoss;
                         InteractablesLists.RangedMiniBossPresent.Add(new RangedMiniBoss(new Point(j, i)));
                         break;
+                    case 'G':
+                        map[i, j] = TileENUM.HeavyEnemy;
+                        InteractablesLists.HeavyEnemiesPresent.Add(new HeavyEnemy(new Point(j, i)));
+                        break;
                     case 'T':
                         map[i, j] = TileENUM.TiltanBoss;
                         InteractablesLists.BossList.Add(new TiltanBoss(new Point(j, i)));
+                        break;
+                    case 'f':
+                        map[i, j] = TileENUM.HiddenTrap;
+                        InteractablesLists.TrapsPresent.Add(new Trap(new Point(j, i)));
                         break;
                     default: throw new ArgumentOutOfRangeException(charMatrix[i, j].ToString());
 
@@ -137,12 +154,21 @@ public class Level
             case TileENUM.RangedMiniBoss:
                 Console.ForegroundColor = ConsoleColor.Green;
                 return '╬';
+            case TileENUM.HeavyEnemy:
+                Console.ForegroundColor = ConsoleColor.Green;
+                return '&';
             case TileENUM.TiltanBoss:
                 Console.ForegroundColor = ConsoleColor.Green;
                 return '♣';
             case TileENUM.TiltanBossSide:
                 Console.ForegroundColor = ConsoleColor.Green;
                 return '♣';
+            case TileENUM.HiddenTrap:
+                Console.ForegroundColor = ConsoleColor.Black;
+                return '¤';
+            case TileENUM.VisibleTrap:
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                return '¤';
             default:
                 throw new ArgumentOutOfRangeException(nameof(tile));
         }
@@ -156,9 +182,11 @@ public class Level
     //←
     //→
     //╬
+    //¤
 
     public void PrintCurrentMapState()
     {
+        Console.ForegroundColor = ConsoleColor.White;
         for (int i = 0; i < CurrentMapState.GetLength(0); i++)
         {
             Console.SetCursorPosition(0, i);
@@ -185,6 +213,17 @@ public class Level
                 else if (CurrentMapState[i, j] == TileENUM.Chest)
                     CurrentMapState[i, j] |= TileENUM.Chest;
                 else CurrentMapState[i, j] = TileENUM.Empty;
+                foreach (Trap trap in InteractablesLists.TrapsPresent)
+                {
+                    if (trap.Position.X == j && trap.Position.Y == i) 
+                    {
+                        if (trap.State == TrapState.Hidden) CurrentMapState[i, j] = TileENUM.HiddenTrap;
+                        if (trap.State == TrapState.Visible || trap.State == TrapState.Triggered)
+                        {
+                            CurrentMapState[trap.Position.Y, trap.Position.X] = TileENUM.VisibleTrap;
+                        }
+                    }
+                }
 
             }
         }
@@ -217,6 +256,11 @@ public class Level
         {
             if (rangedMiniBoss.IsDead()) continue;
             CurrentMapState[rangedMiniBoss.Position.Y, rangedMiniBoss.Position.X] = TileENUM.RangedMiniBoss;
+        }
+        foreach (HeavyEnemy heavy in InteractablesLists.HeavyEnemiesPresent)
+        {
+            if (heavy.IsDead()) continue;
+            CurrentMapState[heavy.Position.Y, heavy.Position.X] = TileENUM.HeavyEnemy;
         }
         foreach (TiltanBoss tiltanBoss in InteractablesLists.BossList)
         {
@@ -266,9 +310,12 @@ public enum TileENUM
     RangedEnemyLeft,
     RangedEnemyRight,
     RangedMiniBoss,
+    HeavyEnemy,
     Exit,
     Entrance,
     Chest,
     TiltanBoss,
-    TiltanBossSide
+    TiltanBossSide,
+    HiddenTrap,
+    VisibleTrap
 }

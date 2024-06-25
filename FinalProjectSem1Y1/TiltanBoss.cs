@@ -20,7 +20,7 @@
     public TiltanBoss(Point point)
     {
         Position = point;
-        MaxHP = 25;
+        MaxHP = 40;
         CurHP = MaxHP;
         Damage = 6;
         BossCounterToMove = 0;
@@ -91,19 +91,19 @@
         int priorityDown = 0;
         int priorityLeft = 0;
         int priorityRight = 0;
-        if (Player.Position.Y > Position.Y)
+        if (Player.Position.Y > Position.Y + 1)
         {
             priorityDown += 1;
         }
-        if (Player.Position.Y < Position.Y)
+        if (Player.Position.Y < Position.Y - 1)
         {
             priorityUp += 1;
         }
-        if (Player.Position.X > Position.X)
+        if (Player.Position.X > Position.X + 1)
         {
             priorityRight += 1;
         }
-        if (Player.Position.X < Position.X)
+        if (Player.Position.X < Position.X - 1)
         {
             priorityLeft += 1;
         }
@@ -124,11 +124,11 @@
         if (possibleDirections[AIChoice] == 3) return "down";
         if (possibleDirections[AIChoice] == 4) return "right";
 
-        throw new Exception("enemy movement failed");
+        throw new Exception("enemy priority check failed");
     }
     public void AdvanceBossMoveCounter()
     {
-        if (CurHP > 15) { return; }
+        if (CurHP > 20) { return; }
         if (IsPlayerAdjacent()) { return; }
         if (BossCounterToMove == 0)
         {

@@ -8,6 +8,9 @@ public  static class GameManager
     public static GameLog GameLog;
     public static HUD Hud;
     public static int levelNum = 1;
+    public static StartScreen StartScreen = new StartScreen();
+    public static DeathScreen DeathScreen = new DeathScreen();
+    public static VictoryScreen VictoryScreen = new VictoryScreen();
 
     public static void StartGame()
     {
@@ -32,6 +35,10 @@ public  static class GameManager
             CurrentLevel.RefreshMap();
             Hud.PrintMonitors();
             CurrentLevel.PrintCurrentMapState();
+            if (levelNum == 11)
+            {
+                Player.CurHP = 0;
+            }
         }
     }
     public static void StartNewLevel()
@@ -68,6 +75,18 @@ public  static class GameManager
             CurrentLevel.RefreshMap();
             Hud.PrintMonitors();
         }
+        foreach (HeavyEnemy heavy in CurrentLevel.InteractablesLists.HeavyEnemiesPresent)
+        {
+            heavy.HeavyEnemyMove();
+            CurrentLevel.RefreshMap();
+            Hud.PrintMonitors();
+        }
+        foreach (HeavyEnemy heavy in CurrentLevel.InteractablesLists.HeavyEnemiesPresent)
+        {
+            heavy.HeavyEnemyAttack();
+            CurrentLevel.RefreshMap();
+            Hud.PrintMonitors();
+        }
         foreach (TiltanBoss tiltanBoss in CurrentLevel.InteractablesLists.BossList)
         {
             tiltanBoss.AdvanceBossMoveCounter();
@@ -83,6 +102,7 @@ public  static class GameManager
         List<StandardEnemy> SEList = new List<StandardEnemy>();
         List<RangedEnemy> REList = new List<RangedEnemy>();
         List<RangedMiniBoss> RMBList = new List<RangedMiniBoss>();
+        List<HeavyEnemy> HEList = new List<HeavyEnemy>();
         List<TiltanBoss> TBList = new List<TiltanBoss>();
         foreach (StandardEnemy standardEnemy in CurrentLevel.InteractablesLists.StandardEnemiesPresent)
         {
@@ -105,6 +125,13 @@ public  static class GameManager
                 RMBList.Add(rangedMiniBoss);
             }
         }
+        foreach (HeavyEnemy heavy in CurrentLevel.InteractablesLists.HeavyEnemiesPresent)
+        {
+            if (!heavy.IsDead())
+            {
+                HEList.Add(heavy);
+            }
+        }
         foreach (TiltanBoss tiltanBoss in CurrentLevel.InteractablesLists.BossList)
         {
             if (!tiltanBoss.IsDead())
@@ -115,6 +142,7 @@ public  static class GameManager
         CurrentLevel.InteractablesLists.StandardEnemiesPresent = SEList;
         CurrentLevel.InteractablesLists.RangedEnemiesPresent = REList;
         CurrentLevel.InteractablesLists.RangedMiniBossPresent = RMBList;
+        CurrentLevel.InteractablesLists.HeavyEnemiesPresent = HEList;
         CurrentLevel.InteractablesLists.BossList = TBList;
     }
     public static void AdvanceLevel()
