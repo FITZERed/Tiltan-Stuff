@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 
 public class Level
 {
@@ -14,7 +15,11 @@ public class Level
     public Level(int levelNum)
     {
         Player = GameManager.Player;
-        map = BuildInitialMapState(MapBuilder.ReadTextFile("Level " + levelNum + ".txt"));
+        string workingDirectory = Environment.CurrentDirectory;
+        string dir = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
+        string file = dir + @"\LevelsNotepad\Level " + levelNum + ".txt";
+        Debug.WriteLine(file);
+        map = BuildInitialMapState(MapBuilder.ReadTextFile(file));
         CurrentMapState = map;
         if (InteractablesLists.RangedEnemiesPresent.Count > 0)
         {
